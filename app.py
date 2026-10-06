@@ -67,9 +67,92 @@ st.markdown(
             background: #f1fff4;
             border-left: 4px solid var(--primary);
             padding: 0.9rem 1rem;
-            border-radius: 12px;
+            border-radius: 14px;
             margin-top: 1rem;
             color: var(--text);
+            box-shadow: 0 6px 14px rgba(22, 163, 74, 0.05);
+        }
+        .status-box.secondary {
+            border-left-color: #84cc16;
+            background: #f8fff5;
+        }
+        .status-box.alert {
+            border-left-color: #dc2626;
+            background: #fff5f5;
+        }
+        .status-box.long {
+            min-height: 115px;
+        }
+        .status-label {
+            color: var(--muted);
+            font-size: 0.73rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .status-value {
+            margin-top: 0.5rem;
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+        .nav-shell {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f0fff5 100%);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 0.55rem 0.9rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 1rem;
+        }
+        .brand-badge {
+            background: linear-gradient(135deg, #16a34a, #22c55e);
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            border-radius: 999px;
+            padding: 0.45rem 0.7rem;
+        }
+        .brand-text {
+            color: var(--text);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .tiny-pill {
+            display: inline-block;
+            padding: 0.32rem 0.7rem;
+            background: #ecfdf5;
+            color: #166534;
+            border-radius: 999px;
+            border: 1px solid #bbf7d0;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .risk-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1rem;
+            box-shadow: 0 5px 12px rgba(22, 163, 74, 0.04);
+            margin-top: 0.6rem;
+        }
+        .risk-label {
+            color: var(--muted);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+        .risk-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-top: 0.45rem;
         }
         .section-header {
             color: var(--text);
@@ -101,6 +184,27 @@ st.markdown(
 st.title("Cybersecurity GRC Control & Evidence Dashboard")
 st.caption("Governance • Risk • Compliance • Evidence")
 
+brand_col, nav_col = st.columns([3, 1])
+with brand_col:
+    st.markdown(
+        """
+        <div class='nav-shell'>
+            <span class='brand-badge'>SECURE</span>
+            <span class='brand-text'>Cyber Governance Center</span>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+with nav_col:
+    st.markdown(
+        """
+        <div class='nav-buttons'>
+            <span class='tiny-pill'>Live</span>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
 controls_df = pd.DataFrame(CONTROL_DATA).copy()
 framework_counts = map_controls_by_framework(CONTROL_DATA)
 summary = summarize_risk_register(CONTROL_DATA)
@@ -124,6 +228,8 @@ controls_list = controls_df.to_dict("records") if not controls_df.empty else []
 score = compute_overall_score(controls_list)
 open_gaps = max(0, round(100 - score, 0))
 priority_items = summary["high"] + summary["critical"]
+
+risk_posture = "Strong" if score >= 80 else "Monitor" if score >= 70 else "Needs attention"
 
 metric_columns = st.columns(4)
 with metric_columns[0]:
@@ -171,12 +277,44 @@ with metric_columns[3]:
         unsafe_allow_html=True,
     )
 
+status_row = st.columns([1.6, 1, 1])
+with status_row[0]:
+    st.markdown(
+        f"""
+        <div class="status-box">
+            <div class="status-label">Risk posture</div>
+            <div class="status-value">{risk_posture}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+with status_row[1]:
+    st.markdown(
+        f"""
+        <div class="status-box secondary">
+            <div class="status-label">Moderate controls</div>
+            <div class="status-value">{summary['moderate']}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+with status_row[2]:
+    st.markdown(
+        f"""
+        <div class="status-box alert">
+            <div class="status-label">Critical / High</div>
+            <div class="status-value">{summary['high'] + summary['critical']}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
 st.markdown('<div class="section-header">Executive summary</div>', unsafe_allow_html=True)
 summary_col, chart_col = st.columns([1.4, 1])
 with summary_col:
     st.markdown(
         """
-        <div class="status-box">
+        <div class="status-box long">
             This control landscape demonstrates a mature governance model with strong executive ownership, risk visibility, and evidence tracking. The largest residual risks remain in legacy hardening, evidence retention, and consistent validation of critical system controls.
         </div>
         """,
@@ -188,6 +326,28 @@ with summary_col:
 
 with chart_col:
     st.bar_chart(controls_df.groupby("domain")["status_score"].mean().round(1))
+
+risk_counts = {
+    "Low": summary["low"],
+    "Moderate": summary["moderate"],
+    "High": summary["high"],
+    "Critical": summary["critical"],
+}
+
+st.markdown('<div class="section-header">Risk distribution</div>', unsafe_allow_html=True)
+heat_col = st.columns(4)
+for idx, (label, value) in enumerate(risk_counts.items()):
+    color = "#16a34a" if label == "Low" else "#84cc16" if label == "Moderate" else "#f59e0b" if label == "High" else "#dc2626"
+    with heat_col[idx]:
+        st.markdown(
+            f"""
+            <div class='risk-card' style='border-top: 5px solid {color};'>
+                <div class='risk-label'>{label}</div>
+                <div class='risk-value'>{value}</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
 st.markdown('<div class="section-header">Framework coverage</div>', unsafe_allow_html=True)
 framework_df = pd.DataFrame(
