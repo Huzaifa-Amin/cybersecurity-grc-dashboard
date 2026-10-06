@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+.coverage
+.coverage.*
+htmlcov/
+.env
+.DS_Store
+.streamlit/
+*.sqlite3
+.mypy_cache/
+.pytype/
+__pypackages__/
+*.log

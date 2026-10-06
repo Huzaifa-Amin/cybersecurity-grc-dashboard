@@ -1,0 +1,10 @@
+services:
+  grc-dashboard:
+    build: .
+    container_name: grc-dashboard
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
