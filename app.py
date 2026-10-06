@@ -17,20 +17,20 @@ st.markdown(
     """
     <style>
         :root {
-            --bg: #f4f8ff;
+            --bg: #f7fff9;
             --panel: #ffffff;
-            --primary: #0b57d0;
-            --primary-soft: #e8f1ff;
-            --success: #107c10;
-            --warning: #ffb900;
-            --danger: #d13438;
-            --text: #10243e;
-            --muted: #5b6779;
-            --border: #dfe8f6;
-            --shadow: 0 8px 18px rgba(18, 35, 64, 0.08);
+            --primary: #16a34a;
+            --primary-soft: #ecfdf5;
+            --success: #15803d;
+            --warning: #f59e0b;
+            --danger: #dc2626;
+            --text: #1f2d1f;
+            --muted: #5f6f5e;
+            --border: #d8f5df;
+            --shadow: 0 8px 18px rgba(22, 163, 74, 0.08);
         }
         .stApp {
-            background: linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+            background: linear-gradient(180deg, #f8fff9 0%, #effcf3 100%);
             color: var(--text);
         }
         .block-container {
@@ -38,7 +38,7 @@ st.markdown(
             padding-bottom: 2rem;
         }
         .metric-card {
-            background: linear-gradient(135deg, var(--panel) 0%, #edf5ff 100%);
+            background: linear-gradient(135deg, var(--panel) 0%, #f0fff4 100%);
             border: 1px solid var(--border);
             border-radius: 18px;
             padding: 1.1rem 1.2rem;
@@ -64,7 +64,7 @@ st.markdown(
             font-size: 0.85rem;
         }
         .status-box {
-            background: #eef8ff;
+            background: #f1fff4;
             border-left: 4px solid var(--primary);
             padding: 0.9rem 1rem;
             border-radius: 12px;
@@ -78,7 +78,7 @@ st.markdown(
             margin-bottom: 0.6rem;
         }
         div[data-testid="stSidebar"] {
-            background: linear-gradient(180deg, #f8fbff 0%, #edf3ff 100%);
+            background: linear-gradient(180deg, #f9fff9 0%, #eefcf3 100%);
         }
         div[data-testid="stDataFrame"] {
             border-radius: 14px;
@@ -88,7 +88,7 @@ st.markdown(
             gap: 0.5rem;
         }
         .stTabs [role="tab"] {
-            background: #edf4ff;
+            background: #f1fff4;
             border-radius: 12px 12px 0 0;
             color: var(--text);
             border: 1px solid var(--border);
