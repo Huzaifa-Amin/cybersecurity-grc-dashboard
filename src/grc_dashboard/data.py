@@ -10,7 +10,7 @@ CONTROL_DATA = [
         "evidence": "Board risk register, quarterly review pack",
         "risk_level": "Low",
         "due_date": "2026-11-30",
-        "note": "Board approves annual risk appetite and quarterly reporting."
+        "note": "Board approves annual risk appetite and quarterly reporting.",
     },
     {
         "id": "GOV-02",
@@ -23,7 +23,7 @@ CONTROL_DATA = [
         "evidence": "Policy library with exception log",
         "risk_level": "Moderate",
         "due_date": "2026-10-20",
-        "note": "Policy updates need stronger evidence retention tracking."
+        "note": "Policy updates need stronger evidence retention tracking.",
     },
     {
         "id": "GOV-03",
@@ -36,7 +36,7 @@ CONTROL_DATA = [
         "evidence": "Management attestation and cyber steering committee minutes",
         "risk_level": "Low",
         "due_date": "2026-12-10",
-        "note": "Leadership oversight is in place and reviewed quarterly."
+        "note": "Leadership oversight is in place and reviewed quarterly.",
     },
     {
         "id": "IDENT-01",
@@ -49,7 +49,7 @@ CONTROL_DATA = [
         "evidence": "CMDB and ownership register",
         "risk_level": "Moderate",
         "due_date": "2026-11-02",
-        "note": "Critical cloud assets still require evidence validation."
+        "note": "Critical cloud assets still require evidence validation.",
     },
     {
         "id": "PROTECT-01",
@@ -62,7 +62,7 @@ CONTROL_DATA = [
         "evidence": "Role-based controls and quarterly access review logs",
         "risk_level": "Low",
         "due_date": "2026-12-01",
-        "note": "Access recertification cadence is operating but needs automation."
+        "note": "Access recertification cadence is operating but needs automation.",
     },
     {
         "id": "PROTECT-02",
@@ -75,7 +75,7 @@ CONTROL_DATA = [
         "evidence": "Baseline hardening checklist and exceptions register",
         "risk_level": "High",
         "due_date": "2026-10-15",
-        "note": "Legacy systems create residual risk and increase remediation urgency."
+        "note": "Legacy systems create residual risk and increase remediation urgency.",
     },
     {
         "id": "DETECT-01",
@@ -88,7 +88,7 @@ CONTROL_DATA = [
         "evidence": "SIEM dashboards and incident ticketing workflow",
         "risk_level": "Low",
         "due_date": "2026-12-11",
-        "note": "Monitoring coverage is broad but still needs tuning for false positives."
+        "note": "Monitoring coverage is broad but still needs tuning for false positives.",
     },
     {
         "id": "RESPOND-01",
@@ -101,7 +101,7 @@ CONTROL_DATA = [
         "evidence": "IR playbooks and tabletop exercise records",
         "risk_level": "Moderate",
         "due_date": "2026-11-15",
-        "note": "Exercises are completed, but vendor communications need clearer escalation paths."
+        "note": "Exercises are completed, but vendor communications need clearer escalation paths.",
     },
     {
         "id": "RECOVER-01",
@@ -114,7 +114,10 @@ CONTROL_DATA = [
         "evidence": "Backup logs and restore validation records",
         "risk_level": "Moderate",
         "due_date": "2026-11-05",
-        "note": "Restore validation is periodic but not yet fully automated across all critical systems."
+        "note": (
+            "Restore validation is periodic but not yet fully automated across all "
+            "critical systems."
+        ),
     },
     {
         "id": "PRIV-01",
@@ -127,6 +130,6 @@ CONTROL_DATA = [
         "evidence": "PIA records and DPIA review log",
         "risk_level": "Low",
         "due_date": "2026-12-20",
-        "note": "Privacy process is documented and reviewed for changes in processing."
-    }
+        "note": "Privacy process is documented and reviewed for changes in processing.",
+    },
 ]

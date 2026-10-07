@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Northstar Cybersecurity GRC Workspace project report">
+  <title>Northstar | Cybersecurity GRC Project Report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #142b49;
+      --navy-2: #203f64;
+      --teal: #087e8b;
+      --teal-pale: #e6f5f5;
+      --green: #247a56;
+      --amber: #a85c00;
+      --red: #b42332;
+      --ink: #172b4d;
+      --muted: #52647a;
+      --paper: #f3f7fb;
+      --white: #fff;
+      --line: #dbe4ef;
+      --shadow: 0 16px 42px rgba(20, 43, 73, .09);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 16px/1.65 "Segoe UI", Arial, sans-serif;
+    }
+    .report { width: min(1100px, calc(100% - 36px)); margin: 36px auto; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 64px clamp(26px, 7vw, 82px);
+      border-radius: 24px;
+      background: linear-gradient(125deg, var(--navy) 4%, #1b4567 60%, var(--teal));
+      color: var(--white);
+      box-shadow: var(--shadow);
+    }
+    .hero::after {
+      position: absolute;
+      right: -72px;
+      bottom: -132px;
+      width: 370px;
+      height: 370px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 50%;
+      box-shadow: 0 0 0 34px rgba(255,255,255,.035), 0 0 0 70px rgba(255,255,255,.025);
+      content: "";
+    }
+    .eyebrow {
+      color: #9fe2de;
+      font-size: .8rem;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    h1 { max-width: 720px; margin: 16px 0; font-size: clamp(2.4rem, 6vw, 4.7rem); line-height: 1.04; }
+    .hero p { max-width: 700px; margin-bottom: 26px; color: #e3f1f7; font-size: 1.12rem; }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 10px; }
+    .hero-meta span {
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: 999px;
+      padding: 6px 13px;
+      color: #f1fbff;
+      font-size: .84rem;
+    }
+    .notice {
+      margin: 18px 0 28px;
+      padding: 14px 18px;
+      border-left: 4px solid var(--amber);
+      border-radius: 10px;
+      background: #fff6e9;
+      color: #613a0b;
+    }
+    .layout { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 24px; align-items: start; }
+    nav, .card, .section {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--white);
+      box-shadow: 0 5px 18px rgba(20,43,73,.035);
+    }
+    nav { position: sticky; top: 18px; padding: 18px; }
+    nav strong { display: block; margin-bottom: 9px; color: var(--navy); }
+    nav a { display: block; padding: 6px 0; color: var(--muted); font-size: .91rem; text-decoration: none; }
+    nav a:hover { color: var(--teal); }
+    main { min-width: 0; }
+    .section { margin-bottom: 20px; padding: clamp(22px, 4vw, 38px); }
+    h2 { margin: 0 0 16px; color: var(--navy); font-size: 1.65rem; line-height: 1.2; }
+    h3 { margin: 22px 0 8px; color: var(--navy-2); font-size: 1.12rem; }
+    p { margin: 9px 0 13px; }
+    .lead { color: var(--muted); font-size: 1.08rem; }
+    .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 20px 0; }
+    .kpi { padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: #fbfdff; }
+    .kpi b { display: block; color: var(--teal); font-size: 1.45rem; }
+    .kpi span { color: var(--muted); font-size: .84rem; }
+    .diagram { margin: 18px 0 2px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: #f8fbfd; }
+    .diagram svg { display: block; width: 100%; height: auto; }
+    .table-wrap { overflow-x: auto; margin: 13px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    th, td { padding: 11px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #edf4f8; color: var(--navy); font-size: .82rem; letter-spacing: .03em; }
+    tr:last-child td { border-bottom: 0; }
+    .role { display: inline-block; padding: 3px 9px; border-radius: 999px; background: var(--teal-pale); color: #075c66; font-size: .78rem; font-weight: 700; }
+    .callout { margin: 14px 0; padding: 14px 17px; border-radius: 10px; background: var(--teal-pale); color: #124b52; }
+    code { padding: 2px 5px; border-radius: 5px; background: #edf2f7; color: #173b5e; font: .9em Consolas, monospace; }
+    pre { overflow-x: auto; padding: 16px; border-radius: 10px; background: #142b49; color: #e5f3fa; font: .87rem/1.55 Consolas, monospace; }
+    .steps { counter-reset: step; display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+    .step { position: relative; min-height: 105px; padding: 15px 16px 15px 54px; border: 1px solid var(--line); border-radius: 12px; }
+    .step::before {
+      counter-increment: step;
+      position: absolute;
+      left: 15px;
+      top: 15px;
+      display: grid;
+      width: 26px;
+      height: 26px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--teal);
+      color: white;
+      content: counter(step);
+      font-weight: 800;
+    }
+    .step b { display: block; color: var(--navy); }
+    .footer { padding: 20px; color: var(--muted); text-align: center; font-size: .86rem; }
+    @media (max-width: 760px) {
+      .layout { grid-template-columns: 1fr; }
+      nav { position: static; }
+      nav div { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 12px; }
+      .kpis { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: 1fr; }
+    }
+    @media print {
+      @page { size: A4; margin: 15mm; }
+      body { background: white; font-size: 10.5pt; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      .report { width: 100%; margin: 0; }
+      .hero { padding: 34px; border-radius: 12px; box-shadow: none; }
+      .layout { display: block; }
+      nav { display: none; }
+      .section, .diagram, .card { box-shadow: none; break-inside: avoid; }
+      a { color: inherit; text-decoration: none; }
+      .section { margin-bottom: 12px; padding: 22px; }
+      h2, h3 { break-after: avoid; }
+      .footer { padding-bottom: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="report">
+    <header class="hero">
+      <div class="eyebrow">Project report · Governance, risk &amp; compliance</div>
+      <h1>Northstar Cybersecurity GRC Workspace</h1>
+      <p>A practical small-organization workspace for control maturity, ownership, remediation, risk prioritization, and evidence references.</p>
+      <div class="hero-meta">
+        <span>Single organization</span>
+        <span>Target: fewer than 1,000 registered users</span>
+        <span>Python · Streamlit · PostgreSQL</span>
+      </div>
+    </header>
+
+    <div class="notice"><b>Scope and assurance note.</b> This is an operational starter, not a certified compliance platform or a load-tested service. Review this report's limitations and deployment controls before entering organizational data.</div>
+
+    <div class="layout">
+      <nav aria-label="Report contents">
+        <strong>Report contents</strong>
+        <div>
+          <a href="#summary">01 · Executive summary</a>
+          <a href="#architecture">02 · Architecture</a>
+          <a href="#data">03 · Data model</a>
+          <a href="#access">04 · Access model</a>
+          <a href="#workflow">05 · User workflows</a>
+          <a href="#scoring">06 · Risk logic</a>
+          <a href="#example">07 · Example</a>
+          <a href="#operations">08 · Operations</a>
+          <a href="#security">09 · Security &amp; limits</a>
+          <a href="#verification">10 · Verification</a>
+        </div>
+      </nav>
+
+      <main>
+        <section class="section" id="summary">
+          <h2>01 · Executive summary</h2>
+          <p class="lead">Northstar brings a compact control register and a role-aware dashboard together for one organization's GRC work. It helps teams see who owns a control, how mature it is, what risk remains, when remediation is due, and where supporting evidence is held.</p>
+          <div class="kpis">
+            <div class="kpi"><b>3</b><span>Least-privilege account roles</span></div>
+            <div class="kpi"><b>4</b><span>Risk ratings: Low to Critical</span></div>
+            <div class="kpi"><b>1</b><span>Shared register with audit events</span></div>
+            <div class="kpi"><b>CSV</b><span>Filtered register export</span></div>
+          </div>
+          <p>Illustrative starter records reference NIST CSF 2.0, ISO 27001 Annex A, NIS2, and GDPR. They are examples, not authoritative framework mappings. Teams can add their own domains, mappings, owners, maturity scores, due dates, and evidence references.</p>
+        </section>
+
+        <section class="section" id="architecture">
+          <h2>02 · Architecture &amp; component responsibilities</h2>
+          <p>The browser connects to the Streamlit application. The app authenticates a named account, checks its role, validates submitted fields, and reads or writes through SQLAlchemy. PostgreSQL is the shared Docker Compose database; a local SQLite file keeps development and tests simple.</p>
+          <div class="diagram">
+            <svg viewBox="0 0 920 320" role="img" aria-labelledby="diagram-title diagram-desc">
+              <title id="diagram-title">Northstar application architecture</title>
+              <desc id="diagram-desc">User browser connects to the Streamlit interface, which uses authentication and authorization, the GRC domain and risk engine, and SQLAlchemy to read and write PostgreSQL. An audit log records changes.</desc>
+              <defs>
+                <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#087e8b"/></marker>
+              </defs>
+              <rect x="20" y="100" width="170" height="100" rx="15" fill="#142b49"/>
+              <text x="105" y="139" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">People</text>
+              <text x="105" y="166" text-anchor="middle" fill="#dcebf4" font-size="13">Browser session</text>
+              <rect x="260" y="100" width="190" height="100" rx="15" fill="#087e8b"/>
+              <text x="355" y="139" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">Streamlit app</text>
+              <text x="355" y="166" text-anchor="middle" fill="#e6fbfb" font-size="13">Dashboard and forms</text>
+              <rect x="520" y="32" width="180" height="100" rx="15" fill="#e6f5f5" stroke="#a9d9dc"/>
+              <text x="610" y="70" text-anchor="middle" fill="#142b49" font-size="16" font-weight="700">Access control</text>
+              <text x="610" y="96" text-anchor="middle" fill="#52647a" font-size="13">PBKDF2 + role checks</text>
+              <rect x="520" y="184" width="180" height="100" rx="15" fill="#eaf1f8" stroke="#c4d3e2"/>
+              <text x="610" y="222" text-anchor="middle" fill="#142b49" font-size="16" font-weight="700">GRC logic</text>
+              <text x="610" y="248" text-anchor="middle" fill="#52647a" font-size="13">Validation + risk engine</text>
+              <rect x="760" y="100" width="145" height="100" rx="15" fill="#247a56"/>
+              <text x="832" y="139" text-anchor="middle" fill="#fff" font-size="16" font-weight="700">Database</text>
+              <text x="832" y="166" text-anchor="middle" fill="#e4f5eb" font-size="13">Postgres / SQLite</text>
+              <line x1="190" y1="150" x2="252" y2="150" stroke="#087e8b" stroke-width="4" marker-end="url(#arrow)"/>
+              <line x1="450" y1="125" x2="512" y2="95" stroke="#087e8b" stroke-width="4" marker-end="url(#arrow)"/>
+              <line x1="450" y1="175" x2="512" y2="220" stroke="#087e8b" stroke-width="4" marker-end="url(#arrow)"/>
+              <line x1="700" y1="82" x2="752" y2="125" stroke="#087e8b" stroke-width="4" marker-end="url(#arrow)"/>
+              <line x1="700" y1="235" x2="752" y2="175" stroke="#087e8b" stroke-width="4" marker-end="url(#arrow)"/>
+              <text x="475" y="302" text-anchor="middle" fill="#52647a" font-size="13">Create, update, audit and query records through parameterized database operations</text>
+            </svg>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Component</th><th>Responsibility</th></tr></thead>
+              <tbody>
+                <tr><td><code>app.py</code></td><td>Sign-in, first-admin setup, filters, metrics, register forms, exports, account administration, and audit display.</td></tr>
+                <tr><td><code>security.py</code></td><td>Username/password validation, salted password hashing, password verification, and reusable permission predicates.</td></tr>
+                <tr><td><code>store.py</code> + Alembic</td><td>Versioned SQLAlchemy schema, database initialization, seeded examples, field validation, persistent CRUD, and audit events.</td></tr>
+                <tr><td><code>risk_engine.py</code></td><td>Maturity aggregation, framework counts, risk summaries, and priority ordering.</td></tr>
+                <tr><td>PostgreSQL / SQLite</td><td>PostgreSQL is shared Compose storage; SQLite is the local development and test adapter.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section" id="data">
+          <h2>03 · Data model and tables</h2>
+          <p>Alembic applies versioned schema migrations on application startup. An empty control table is seeded once with the illustrative register. Users are never seeded with a shared default password; the first administrator is created by a setup flow requiring an operator-configured bootstrap token.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Table</th><th>Main columns</th><th>Purpose and safeguards</th></tr></thead>
+              <tbody>
+                <tr><td><code>users</code></td><td><code>id</code>, <code>username</code>, <code>display_name</code>, <code>password_hash</code>, <code>role</code>, <code>is_active</code>, <code>must_change_password</code>, <code>auth_version</code>, <code>created_at</code></td><td>Named local accounts. Unique usernames, constrained role values, salted password hashes, account disablement, forced temporary-password change, and session invalidation after account/password changes.</td></tr>
+                <tr><td><code>controls</code></td><td><code>id</code>, <code>control</code>, <code>domain</code>, <code>framework</code>, <code>owner</code>, <code>status</code>, <code>status_score</code>, <code>risk_level</code>, <code>due_date</code>, <code>evidence</code>, <code>note</code></td><td>Unique control register. Database checks constrain risk, status, and maturity; application validation checks required text and ISO dates.</td></tr>
+                <tr><td><code>audit_log</code></td><td><code>id</code>, <code>actor_username</code>, <code>action</code>, <code>entity_type</code>, <code>entity_id</code>, <code>details</code>, <code>created_at</code></td><td>Append-only application events for control changes, account changes, and password changes. Visible to administrators.</td></tr>
+                <tr><td><code>app_settings</code></td><td><code>key</code>, <code>value</code></td><td>Stores the one-time sample-data seed marker so an intentionally emptied register stays empty after restart.</td></tr>
+                <tr><td><code>alembic_version</code></td><td><code>version_num</code></td><td>Migration framework metadata that records the schema revision applied to this database.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout"><b>Evidence handling:</b> evidence fields hold references such as a restricted document ID, ticket, or repository path. The application does not upload, scan, or store evidence files.</div>
+        </section>
+
+        <section class="section" id="access">
+          <h2>04 · Least-privilege access model</h2>
+          <p>Every authenticated action is associated with a named user. Permissions are intended to follow the work required now; administrators can change a user's role or deactivate an account when that need ends.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Capability</th><th><span class="role">Viewer</span></th><th><span class="role">Editor</span></th><th><span class="role">Administrator</span></th></tr></thead>
+              <tbody>
+                <tr><td>View filtered dashboard and control register</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+                <tr><td>Export filtered register to CSV</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+                <tr><td>Create or update control records</td><td>No</td><td>Yes</td><td>Yes</td></tr>
+                <tr><td>Delete control records</td><td>No</td><td>No</td><td>Yes</td></tr>
+                <tr><td>Create, change, or deactivate user accounts</td><td>No</td><td>No</td><td>Yes</td></tr>
+                <tr><td>Read the application audit history</td><td>No</td><td>No</td><td>Yes</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Passwords require at least 12 characters and are stored as PBKDF2-HMAC-SHA-256 hashes with a random 16-byte salt and 600,000 iterations. There is no default account. A bootstrap token gates the first administrator. New accounts and administrator-reset accounts must change their temporary password before opening the dashboard. The application prevents demoting or disabling the last active administrator. Account or password changes increment an authentication version so existing sessions are rejected on their next request.</p>
+          <div class="callout"><b>Operational boundary:</b> application-managed passwords do not provide SSO, MFA, e-mail verification, or self-service recovery. Administrators can reset another user's password; secure transfer of the temporary credential is an organizational responsibility. Use an identity provider when organizational policy requires stronger identity controls.</div>
+        </section>
+
+        <section class="section" id="workflow">
+          <h2>05 · Main workflows</h2>
+          <div class="steps">
+            <div class="step"><b>Initialize</b>The app creates its tables and seeds sample controls only when the register is empty.</div>
+            <div class="step"><b>Claim administration</b>The operator sets a bootstrap token out of band; the first administrator enters it during one-time setup.</div>
+            <div class="step"><b>Provision least privilege</b>An administrator creates individual accounts, assigns viewer, editor, or administrator access, and the user replaces their temporary password at first sign-in.</div>
+            <div class="step"><b>Assess controls</b>Editors maintain ownership, status, scores, risk, due dates, evidence references, and remediation notes.</div>
+            <div class="step"><b>Review and prioritize</b>Users filter by framework, domain, risk, and search text; dashboard calculations follow the visible selection.</div>
+            <div class="step"><b>Export and audit</b>Any role can export the filtered register as CSV; formula-like text is neutralized for spreadsheet use, and administrators can review recent changes.</div>
+          </div>
+        </section>
+
+        <section class="section" id="scoring">
+          <h2>06 · Scoring and interpretation</h2>
+          <h3>Control maturity</h3>
+          <pre>Average maturity = sum(status_score for selected controls) / count(selected controls)</pre>
+          <p>The result is rounded to one decimal place. An empty selection reports 0.0. Each record's maturity score is an editor-entered value from 0 to 100; the application does not infer it from status text.</p>
+          <h3>Priority score</h3>
+          <pre>Priority = (risk severity index x 25) + (100 - status_score)
+Severity index: Low=0, Moderate=1, High=2, Critical=3</pre>
+          <p>Higher values sort first. This transparent heuristic favors higher residual risk and lower maturity; it is not a quantitative likelihood-impact model. The overdue indicator counts controls whose due date is before today and whose status is not Implemented. Filters affect the dashboard metrics and risk lists.</p>
+        </section>
+
+        <section class="section" id="example">
+          <h2>07 · Worked record example</h2>
+          <p>Illustrative record from the starter register:</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Field</th><th>Example value</th><th>How the dashboard uses it</th></tr></thead>
+              <tbody>
+                <tr><td>ID / control</td><td><code>PROTECT-02</code> · Secure configuration management</td><td>Unique register item shown in tables, audit events, and filters.</td></tr>
+                <tr><td>Domain / framework</td><td>Protect · NIS2</td><td>Groups the control in domain maturity and framework coverage.</td></tr>
+                <tr><td>Owner / status</td><td>Platform Engineering · Partially implemented</td><td>Communicates accountability and implementation progress.</td></tr>
+                <tr><td>Maturity / risk</td><td>64 / 100 · High</td><td>Priority = (2 x 25) + (100 - 64) = <b>86</b>.</td></tr>
+                <tr><td>Due date / evidence</td><td>2026-10-15 · Baseline hardening checklist and exceptions register</td><td>Supports remediation review and locates evidence outside this app.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>If this control is selected alone, the average maturity metric is 64.0%. Its due date is compared with the application server's current date for overdue status.</p>
+        </section>
+
+        <section class="section" id="operations">
+          <h2>08 · Installation, deployment, and maintenance</h2>
+          <p>Local development uses SQLite at <code>./data/grc_dashboard.db</code>. Docker Compose starts one Streamlit service and one PostgreSQL 16 service with a persistent named volume. The app container runs as an unprivileged user and drops Linux capabilities. Compose binds the dashboard to <code>127.0.0.1:8501</code> by default.</p>
+          <h3>Operational checklist</h3>
+          <ul>
+            <li>Configure unique random values for <code>POSTGRES_PASSWORD</code> and <code>BOOTSTRAP_ADMIN_TOKEN</code> in an ignored local <code>.env</code>; do not commit secrets.</li>
+            <li>For remote users, front the service with TLS and a restricted reverse proxy; preserve Streamlit's XSRF protections.</li>
+            <li>Back up PostgreSQL regularly, test restores, and protect backup files to the same standard as the database.</li>
+            <li>Review administrator assignments and account status periodically; deactivate accounts no longer required.</li>
+            <li>Monitor logs, database health, disk capacity, dependency/security advisories, and failed deployment health checks.</li>
+            <li>Keep evidence files in an approved document-management system and enter only a safe reference in Northstar.</li>
+          </ul>
+          <h3>Useful commands</h3>
+          <pre>docker compose up --build -d
+docker compose ps
+docker compose logs -f grc-dashboard
+docker compose exec -T database pg_dump -U grc_dashboard grc_dashboard &gt; backup.sql</pre>
+          <p>The deployment has one application process and no horizontal scaling, queue, cache, or dedicated monitoring service. Its target user count is a design goal, not a measured capacity promise; validate concurrency, backups, and recovery in the target hosting environment.</p>
+        </section>
+
+        <section class="section" id="security">
+          <h2>09 · Security model, risks, and limitations</h2>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Concern</th><th>Current mitigation</th><th>Remaining responsibility</th></tr></thead>
+              <tbody>
+                <tr><td>Unauthorized account access</td><td>Named accounts, salted password hashes, role checks, bootstrap token, account deactivation.</td><td>Enforce TLS and network restrictions; no MFA or identity-provider integration.</td></tr>
+                <tr><td>Over-privileged users</td><td>Viewer/editor/administrator capability split and protected last administrator.</td><td>Assign roles to work needs and review them routinely.</td></tr>
+                <tr><td>Unauthorized or invalid writes</td><td>Parameterized SQLAlchemy operations, field validation, database constraints, audit events.</td><td>Application audit events are not a tamper-proof external audit service.</td></tr>
+                <tr><td>Loss or exposure of records</td><td>PostgreSQL persistent volume; Compose port is localhost-bound by default.</td><td>Configure encrypted backups, restore tests, storage controls, and production TLS/reverse proxy.</td></tr>
+                <tr><td>Evidence leakage</td><td>Only a text reference is stored; no file upload functionality.</td><td>Use approved access-controlled evidence storage; do not put secrets or sensitive evidence in notes.</td></tr>
+                <tr><td>Incorrect compliance conclusion</td><td>Report labels starter mappings and scores as decision support.</td><td>Validate framework applicability, evidence, and legal interpretations with qualified reviewers.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p><b>Known gaps:</b> no SSO/MFA, e-mail invitations or self-service recovery, rate limiting backed by shared storage, evidence-file upload, immutable audit export, multi-tenant isolation, or load/performance test. The app is intended for one organization and a single app instance. Review <a href="../SECURITY.md">SECURITY.md</a> and <a href="THREAT_MODEL.md">the threat model</a> before deployment.</p>
+        </section>
+
+        <section class="section" id="verification">
+          <h2>10 · Verification and acceptance criteria</h2>
+          <p>The automated test suite covers score aggregation, framework mapping, one-shot risk iterables, database seeding and CRUD, input validation, password hashing/authentication, role behavior, administrator protection, and audit ordering. CI additionally runs Ruff, Black, and a dependency audit.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Acceptance area</th><th>Expected behavior</th></tr></thead>
+              <tbody>
+                <tr><td>Persistence</td><td>Created and edited controls remain after app reruns/restarts using the configured shared database.</td></tr>
+                <tr><td>Least privilege</td><td>Viewer cannot edit; editor cannot delete or manage accounts; administrator can manage users and delete records.</td></tr>
+                <tr><td>Input and export safety</td><td>Invalid risk/status values, dates, scores, and required fields are rejected; formula-like text is neutralized in CSV exports.</td></tr>
+                <tr><td>Auditability</td><td>Control and account changes create an event with actor, action, entity, and timestamp.</td></tr>
+                <tr><td>First run</td><td>No default admin is created; setup remains locked without an operator-provided bootstrap token.</td></tr>
+                <tr><td>Reporting</td><td>Dashboard values and CSV data follow the selected filters.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>See <a href="VERIFICATION_REPORT.md">the verification report</a> for the commands actually run in the current workspace. A successful unit test run does not certify a hosting environment or establish a user-capacity guarantee.</p>
+        </section>
+      </main>
+    </div>
+    <footer class="footer">Northstar Cybersecurity GRC Workspace · Project report · Review configuration and limits before operational use.</footer>
+  </div>
+</body>
+</html>

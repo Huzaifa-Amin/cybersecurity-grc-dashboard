@@ -1,135 +1,123 @@
-# Cybersecurity GRC Control & Evidence Dashboard
+# Northstar Cybersecurity GRC Workspace
 
-A beginner-friendly but portfolio-grade cybersecurity governance, risk, and compliance dashboard designed to show employers that you understand how security programs are governed in real organizations.
+A single-organization governance, risk, and compliance workspace for a small team. Maintain a shared security-control register, assign owners and remediation dates, record evidence references, review risk priorities, and export filtered reports.
 
-## Why this project matters
+> **Data protection:** This application is not a certified GRC or document-management platform. Do not upload sensitive evidence files or regulated personal data. Store only approved evidence references and deploy behind HTTPS on a restricted network.
 
-This project is built for the same hiring market that values:
+## What it does
 
-- ISO 27001 and ISMS concepts
-- NIST CSF 2.0 governance and risk control mapping
-- NIS2 operational resilience expectations
-- GDPR and privacy risk awareness
-- Board-ready security reporting and evidence tracking
+- Role-based accounts: **administrator**, **editor**, and **viewer**
+- Persistent controls, framework mappings, owners, maturity, risks, dates, evidence references, and notes
+- Executive metrics and domain/framework summaries based on the active filters
+- Control create, edit, and administrator-only delete workflows
+- Evidence/remediation register and CSV export
+- Spreadsheet-formula neutralization for untrusted text in CSV exports
+- User management, password changes, administrator safeguards, and a control/account audit trail
+- PostgreSQL deployment through Docker Compose; SQLite for local development and tests
 
-This is a strong fit for GRC, compliance, security governance, and cyber risk roles across Europe and the United States.
+The app is designed for a single organization with fewer than 1,000 registered users. That is a target usage profile, not a load-test or availability guarantee. The Compose deployment runs one Streamlit application instance with one PostgreSQL database.
 
-## Project goals
+## Quick start: local development
 
-- Demonstrate a working governance and control register
-- Show how controls map to major frameworks
-- Present risk and evidence in a board-ready dashboard
-- Provide a professional portfolio project with documentation, CI, tests, and Docker setup
+Requires Python 3.12 or newer.
 
-## Architecture diagram
-
-```text
-User / Hiring Manager
-        |
-        v
-Streamlit dashboard (Python)
-        |
-        v
-GRC data model + risk engine
-        |
-        +--> Control data set
-        +--> NIST CSF 2.0 mapping
-        +--> ISO 27001 Annex A mapping
-        +--> NIS2 / GDPR controls
-        +--> Risk scoring and prioritization
-```
-
-## Demo features
-
-- Executive KPI overview
-- Control mapping across frameworks
-- Risk register with priority scoring
-- Ownership and evidence tracking
-- Status filtering by framework and domain
-- Board-facing summary text for non-technical stakeholders
-
-## Tech stack
-
-- Python 3.12
-- Streamlit
-- Pandas
-- SQLite-ready data model structure
-- Pytest
-- GitHub Actions
-- Docker
-
-## Local setup
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 pip install -r requirements.txt
+```
+
+Set a local database URL and a one-time first-administrator bootstrap token in PowerShell. Generate the token with a cryptographically secure random generator:
+
+```powershell
+$bytes = New-Object byte[] 32
+$rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+$rng.GetBytes($bytes)
+$bootstrapToken = [BitConverter]::ToString($bytes).Replace('-', '').ToLower()
+$env:BOOTSTRAP_ADMIN_TOKEN = $bootstrapToken
+$env:DATABASE_URL = 'sqlite:///./data/grc_dashboard.db'
+Write-Host "Bootstrap token (keep private; enter it once in the setup screen): $bootstrapToken"
 streamlit run app.py
 ```
 
-## Docker
+On the first visit, enter the bootstrap token printed in the terminal to create the first administrator. Treat it as a secret; do not paste it into chat or commit it. The token is needed only until an account has been created. Subsequent users are provisioned by an administrator.
 
-```bash
-docker build -t grc-dashboard .
-docker run -p 8501:8501 grc-dashboard
+## Docker Compose: shared PostgreSQL
+
+1. Generate two independent 64-character secrets and write them to `.env`:
+
+   ```powershell
+   $rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+   $bytes = New-Object byte[] 32
+   $rng.GetBytes($bytes)
+   $dbPassword = [BitConverter]::ToString($bytes).Replace('-', '').ToLower()
+   $rng.GetBytes($bytes)
+   $bootstrapToken = [BitConverter]::ToString($bytes).Replace('-', '').ToLower()
+   @("POSTGRES_PASSWORD=$dbPassword", "BOOTSTRAP_ADMIN_TOKEN=$bootstrapToken") |
+     Set-Content -Encoding ascii .env
+   Write-Host "Bootstrap token (keep private; enter it once in the setup screen): $bootstrapToken"
+   ```
+
+   `.env` is git-ignored. Never commit it or share the token.
+2. Start the app:
+
+   ```powershell
+   docker compose up --build -d
+   ```
+
+4. Open `http://127.0.0.1:8501` and complete first-administrator setup with the bootstrap token.
+5. Create named accounts with the minimum role needed for each person's work.
+
+The dashboard port is bound to localhost by default. For remote access, use a hardened HTTPS reverse proxy and firewall; do not expose the unauthenticated Streamlit port directly to the internet. See [docs/SETUP.md](docs/SETUP.md) and [docs/RUNBOOK.md](docs/RUNBOOK.md).
+
+## Roles
+
+| Role | Read and export | Create / edit controls | Delete controls | Manage users and audit |
+|---|---:|---:|---:|---:|
+| Viewer | Yes | No | No | No |
+| Editor | Yes | Yes | No | No |
+| Administrator | Yes | Yes | Yes | Yes |
+
+Every account starts with a password of at least 12 characters. Passwords are salted and derived with PBKDF2-HMAC-SHA-256. Newly created and administrator-reset accounts must change their temporary password before reaching the dashboard. Role changes and password updates invalidate existing sessions on their next request; users sign in again.
+
+## Project report
+
+Read the print-ready report at [docs/PROJECT_REPORT.html](docs/PROJECT_REPORT.html). It includes the architecture infographic, entity/table descriptions, workflows, role matrix, risk-scoring explanation, example records, security controls, deployment model, and limitations. Open it in a browser and use **Print → Save as PDF** for a shareable report.
+
+## Quality checks
+
+```powershell
+pip install -r requirements-dev.txt
+python -m pytest -q
+ruff check .
+black --check .
 ```
 
-## Framework mapping
+See [docs/VERIFICATION_REPORT.md](docs/VERIFICATION_REPORT.md) for the latest local verification evidence.
 
-This project intentionally maps controls to commonly used governance frameworks, including:
+## Repository map
 
-- NIST CSF 2.0
-- ISO 27001 Annex A
-- NIS2
-- GDPR
+```text
+app.py                         Streamlit application and role-aware UI
+src/grc_dashboard/data.py      Demonstration controls used to seed an empty register
+src/grc_dashboard/store.py     Validation, persistence, account lifecycle, and audit log
+src/grc_dashboard/security.py  Password hashing and role permission checks
+src/grc_dashboard/risk_engine.py  Maturity and risk calculations
+migrations/                     Alembic schema migrations applied on app startup
+tests/                         Risk, persistence, and access-control tests
+docs/PROJECT_REPORT.html      Print-ready project report and infographic
+```
 
-## Threat model summary
+## Important limits
 
-This is a portfolio project and not a production SOC platform, but it still reflects realistic security concerns:
-
-- unauthorized access to evidence or policy records
-- stale or incomplete control data
-- misalignment between risk owners and evidence owners
-- weak governance around exceptions and remediation tracking
-
-## Why employers care
-
-This project shows that you can:
-
-- understand governance and control design
-- translate technical controls into business language
-- show evidence and accountability in a clear way
-- map compliance requirements to risk management practice
+- This is a small-team operational starter, not a substitute for a mature enterprise GRC system, identity provider, or certified compliance service.
+- Authentication is application-managed; there is no SSO, MFA, invitation email, or self-service password reset. Administrators create accounts and can set a temporary password reset; users must change it before using the app.
+- Evidence is stored as a reference only. Evidence files stay in the organization's approved document repository.
+- The included controls are illustrative starter data. Framework mappings need review against the applicable official standard and the organization's scope.
+- Risk scores are decision support. They do not establish legal compliance or certification.
+- Before production use, configure TLS, backups and restore tests, monitoring, access restrictions, secrets rotation, and an organizational incident response process.
 
 ## License
 
-MIT
-
-## Repository structure
-
-```text
-.
-├── app.py
-├── Dockerfile
-├── LICENSE
-├── README.md
-├── SECURITY.md
-├── CONTRIBUTING.md
-├── requirements.txt
-├── src/
-│   └── grc_dashboard/
-│       ├── __init__.py
-│       ├── data.py
-│       └── risk_engine.py
-├── tests/
-│   └── test_risk_engine.py
-├── docs/
-│   ├── ARCHITECTURE.md
-│   ├── INTERVIEW_GUIDE.md
-│   └── THREAT_MODEL.md
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-└── docker-compose.yml
-```
+MIT. See [LICENSE](LICENSE).
