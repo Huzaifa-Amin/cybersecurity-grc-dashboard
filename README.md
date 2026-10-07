@@ -117,6 +117,10 @@ Open [http://127.0.0.1:8501](http://127.0.0.1:8501) and complete first-administr
 
 > **Important:** the CI workflow verifies that the Docker image builds. A live PostgreSQL/Compose deployment, backup-and-restore procedure, and capacity under real user load have not been validated in this environment. Complete those checks in the target hosting environment before production use.
 
+## Hosted deployment
+
+GitHub stores the source code; **GitHub Pages cannot run this interactive app or its database**. A Render Blueprint is provided for hosting the Docker app with PostgreSQL. It requires a Render account connected to this repository and may incur ongoing service and database charges. Review the plan prices before provisioning. Follow the [Render deployment steps](docs/SETUP.md#hosted-deployment-with-render); the hosted workspace starts with a fresh database, so create a new admin account there. Local SQLite accounts/data are not transferred.
+
 ## Risk prioritization
 
 The dashboard provides decision support; it does not determine legal compliance or certification. The priority score combines risk severity with the remaining maturity gap:
