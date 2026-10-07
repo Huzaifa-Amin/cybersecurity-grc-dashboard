@@ -1,37 +1,34 @@
 # Verification report
 
 **Verification date:** 2026-10-07
-**Scope:** Organization workspaces, group permissions, risk controls, CISA feed parsing, migration recovery, documentation, and the local Streamlit runtime.
+**Verified revision:** `720f9e2` (`master`)
+**Scope:** Local Northstar application, organization workspaces, group permissions, risk controls, threat-feed handling, migrations, and documentation.
 
-## Automated checks
+## Release status
 
-| Check | Exact command | Result |
+The application and its documentation are merged into the repository's `master` branch. Local use does not depend on a hosted provider. The local Streamlit application is running at [http://127.0.0.1:8501](http://127.0.0.1:8501), responds successfully to its health endpoint, and renders the Northstar sign-in screen.
+
+For a fresh local setup, follow the **Quick start: local use** section in the [README](../README.md). Generate a private bootstrap token, enter it only on the initial setup screen, and create the first administrator account. Do not reuse or share a password or bootstrap token from another environment.
+
+## Verification performed
+
+| Check | Command or method | Result |
 |---|---|---|
-| Full test suite | `D:\Cybersecurity Project\.venv\Scripts\python.exe -m pytest -q` | **Passed:** 23 tests in 23.80 seconds. |
+| Full test suite | `D:\Cybersecurity Project\.venv\Scripts\python.exe -m pytest -q` | **Passed:** 23 tests in 20.97 seconds. |
 | Ruff | `D:\Cybersecurity Project\.venv\Scripts\ruff.exe check .` | **Passed:** All checks passed. |
 | Black | `D:\Cybersecurity Project\.venv\Scripts\black.exe --check .` | **Passed:** 16 files unchanged. |
-| Visual document syntax | Python `xml.etree.ElementTree` on all 3 SVGs; `html.parser` on `docs/PROJECT_REPORT.html` | **Passed:** All SVG documents parsed and the report HTML parsed. |
-| Local app health | `curl.exe --fail --silent --show-error http://127.0.0.1:8501/_stcore/health` | **Passed:** HTTP endpoint returned `ok`. |
+| Local app health | `curl.exe --fail --silent --show-error --max-time 5 http://127.0.0.1:8501/_stcore/health` | **Passed:** returned `ok`. |
+| Browser smoke check | Opened `http://127.0.0.1:8501` | **Passed:** Northstar title and sign-in form rendered. |
+| GitHub checks | Pull request checks for the merged release | **Passed:** quality, CodeQL, and dependency scan checks. |
 
-The test suite includes AppTest sign-in/setup and UI role checks; organization-scoped control access and duplicate IDs; direct/group role limits; a legacy-data migration backfill; recovery from a partially created SQLite `organizations` table; audit/history; threat-triage validation and isolation; mocked CISA feed parsing/limits; risk calculations; and safe CSV export.
+The automated tests cover first-admin setup and sign-in UI, workspace-scoped access, direct and group roles, migration/backfill and interrupted SQLite migration recovery, control history and audit events, threat-triage validation/isolation, mocked CISA feed parsing and limits, risk scoring, and safe CSV export.
 
-## Local database and browser check
+## Verification boundaries
 
-The existing local SQLite database was preserved and upgraded to Alembic revision `0002_workspaces`. Verification confirmed the existing account remained present, the existing 10 control records remained, and the starter workspace was initialized. The local application rendered its sign-in page at `http://127.0.0.1:8501`; the health endpoint returned `ok`.
+- CISA feed parsing is tested with mocked responses; a live external feed request was not performed in this verification.
+- PostgreSQL and Docker Compose were not started or validated here. Test coverage uses temporary SQLite databases.
+- Backup restoration, concurrent-user capacity, and production load have not been measured.
+- No hosted service or database has been provisioned. Hosted-provider setup is optional and does not block local use.
+- The stated target of fewer than 1,000 users is a design goal, not a measured capacity or availability guarantee.
 
-The CISA client is tested with mocked HTTP responses. A live external CISA feed fetch was not included in this check. Feed data are fetched on demand and cached in application memory for up to one hour.
-
-## GitHub and hosting validation
-
-GitHub Actions is configured to run tests/lint, CodeQL/dependency scans, and a Docker image build for pull requests. Passing those checks validates code and the container build; it does not provision or verify a live Render service.
-
-Render provisioning was not performed. The shared Render dashboard requires a sign-in/authorization step, and the proposed managed web/database plans may incur charges. Review provider pricing and complete the Render/GitHub authorization before creating live resources. The local app and data are not automatically copied to a hosted database.
-
-## Remaining release checks
-
-- Run the product branch's GitHub CI/security checks after it is pushed.
-- Provision the Render Blueprint only after account access and billing are authorized; then verify login, organization membership, persistence across restarts, backup/restore, and TLS/reachability.
-- Test migrations and backup restoration against the actual PostgreSQL deployment.
-- Complete an independent security/accessibility review and a production-appropriate concurrency/load test before relying on the service.
-
-The under-1,000-user profile is a design target, not a measured capacity, performance commitment, or availability guarantee. This report is not a compliance attestation or production certification.
+Before using the system for a production organization, validate the PostgreSQL deployment and migrations, configure HTTPS and network restrictions, test backups and restoration, and perform a workload test appropriate to expected use. Northstar is not a compliance certification, an asset inventory, or an immutable audit service.
