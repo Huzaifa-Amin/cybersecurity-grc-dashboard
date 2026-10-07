@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 500" role="img" aria-labelledby="title desc">
+  <title id="title">Northstar architecture diagram</title>
+  <desc id="desc">Browser to Streamlit application, role and validation services, SQLAlchemy persistence, and PostgreSQL for teams or SQLite for local use, with audit events.</desc>
+  <defs>
+    <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#142b49"/>
+      <stop offset="1" stop-color="#203f64"/>
+    </linearGradient>
+    <linearGradient id="teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#087e8b"/>
+      <stop offset="1" stop-color="#32a8a4"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto">
+      <path d="M0 0L12 6 0 12z" fill="#6d91a8"/>
+    </marker>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#142b49" flood-opacity=".10"/>
+    </filter>
+  </defs>
+  <rect width="1440" height="500" rx="24" fill="#f3f7fb"/>
+  <text x="62" y="67" fill="#142b49" font-family="Arial,sans-serif" font-size="27" font-weight="700">One workflow, clear trust boundaries</text>
+  <text x="62" y="96" fill="#52647a" font-family="Arial,sans-serif" font-size="14">Named users · server-side permission checks · validated records · durable storage</text>
+  <g filter="url(#shadow)">
+    <rect x="55" y="160" width="220" height="172" rx="18" fill="url(#navy)"/>
+    <rect x="350" y="160" width="260" height="172" rx="18" fill="url(#teal)"/>
+    <rect x="685" y="125" width="300" height="108" rx="18" fill="#fff" stroke="#dbe4ef"/>
+    <rect x="685" y="260" width="300" height="108" rx="18" fill="#fff" stroke="#dbe4ef"/>
+    <rect x="1060" y="160" width="320" height="172" rx="18" fill="#247a56"/>
+  </g>
+  <text x="165" y="215" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">People</text>
+  <text x="165" y="246" text-anchor="middle" fill="#dcebf4" font-family="Arial,sans-serif" font-size="14">Browser session</text>
+  <text x="165" y="274" text-anchor="middle" fill="#dcebf4" font-family="Arial,sans-serif" font-size="12">Viewer · Editor · Admin</text>
+  <text x="480" y="213" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">Streamlit application</text>
+  <text x="480" y="244" text-anchor="middle" fill="#e6fbfb" font-family="Arial,sans-serif" font-size="14">Dashboard · forms · CSV export</text>
+  <text x="480" y="272" text-anchor="middle" fill="#e6fbfb" font-family="Arial,sans-serif" font-size="12">Session verification · role-gated UI</text>
+  <text x="835" y="166" text-anchor="middle" fill="#142b49" font-family="Arial,sans-serif" font-size="17" font-weight="700">Identity &amp; permissions</text>
+  <text x="835" y="195" text-anchor="middle" fill="#52647a" font-family="Arial,sans-serif" font-size="13">PBKDF2 password hashes · least privilege</text>
+  <text x="835" y="301" text-anchor="middle" fill="#142b49" font-family="Arial,sans-serif" font-size="17" font-weight="700">GRC domain services</text>
+  <text x="835" y="330" text-anchor="middle" fill="#52647a" font-family="Arial,sans-serif" font-size="13">Validation · maturity · risk prioritization</text>
+  <text x="1220" y="214" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">Database</text>
+  <text x="1220" y="246" text-anchor="middle" fill="#e4f5eb" font-family="Arial,sans-serif" font-size="14">PostgreSQL · shared deployment</text>
+  <text x="1220" y="274" text-anchor="middle" fill="#e4f5eb" font-family="Arial,sans-serif" font-size="12">SQLite · local development/tests</text>
+  <line x1="276" y1="246" x2="340" y2="246" stroke="#6d91a8" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="611" y1="210" x2="675" y2="180" stroke="#6d91a8" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="611" y1="282" x2="675" y2="314" stroke="#6d91a8" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="986" y1="180" x2="1050" y2="212" stroke="#6d91a8" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="986" y1="314" x2="1050" y2="278" stroke="#6d91a8" stroke-width="4" marker-end="url(#arrow)"/>
+  <rect x="350" y="405" width="1030" height="54" rx="13" fill="#e6f5f5"/>
+  <circle cx="379" cy="432" r="7" fill="#087e8b"/>
+  <text x="398" y="437" fill="#124b52" font-family="Arial,sans-serif" font-size="13" font-weight="700">Transactional writes also create an application audit event</text>
+  <text x="62" y="437" fill="#52647a" font-family="Arial,sans-serif" font-size="12">No evidence files stored</text>
+  <text x="62" y="458" fill="#52647a" font-family="Arial,sans-serif" font-size="12">References only</text>
+</svg>

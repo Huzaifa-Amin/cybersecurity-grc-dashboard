@@ -12,6 +12,8 @@
 | Formatting | `D:\Cybersecurity Project\.venv\Scripts\python.exe -m black --check .` | **Passed:** 13 files unchanged. |
 | Dependency audit | `D:\Cybersecurity Project\.venv\Scripts\pip-audit.exe -r requirements.txt -r requirements-dev.txt` | **Passed:** No known vulnerabilities found across runtime and development dependencies. |
 | Compose YAML syntax | `& 'D:\Cybersecurity Project\.venv\Scripts\python.exe' -c "import yaml; yaml.safe_load(open('docker-compose.yml', encoding='utf-8')); print('docker-compose.yml parses as YAML')"` | **Passed:** YAML parsed successfully. |
+| Docker image build | GitHub Actions CI: `docker build --tag northstar-grc:ci .` | **Passed:** CI run [37571507321](https://github.com/Huzaifa-Amin/cybersecurity-grc-dashboard/actions/runs/37571507321). |
+| GitHub security workflows | CodeQL Analysis and dependency scan | **Passed:** Security run [37571507145](https://github.com/Huzaifa-Amin/cybersecurity-grc-dashboard/actions/runs/37571507145). |
 
 The test suite includes Streamlit `AppTest` coverage for first-administrator setup, administrator and viewer sign-in, required temporary-password replacement, and role-specific UI boundaries. Store tests cover migrations, sample-data seeding, control CRUD/audit entries, validation, password hashing/reset, session-version changes, role behavior, and administrator safeguards. CSV tests verify formula-like input is exported as text.
 
@@ -29,7 +31,7 @@ Result: **Passed.** The app started at `http://127.0.0.1:8502`; `GET /_stcore/he
 
 ## Deployment validation boundary
 
-The Docker CLI is not installed in this environment. Docker Compose interpolation, image build, PostgreSQL startup, and PostgreSQL-backed app behavior were therefore **not run**. The Compose file passed a YAML syntax parse, but that does not prove a successful container deployment. Validate it in an environment with Docker Compose before deployment.
+The Docker CLI is not installed in the local development environment, so Docker Compose interpolation, PostgreSQL startup, and PostgreSQL-backed application behavior were **not run locally**. The container image build did pass in GitHub Actions, but this does not validate Compose orchestration, database connectivity, backups/restores, or production deployment. Validate those in an environment with Docker Compose and PostgreSQL before team use.
 
 ## Known scope limits
 
