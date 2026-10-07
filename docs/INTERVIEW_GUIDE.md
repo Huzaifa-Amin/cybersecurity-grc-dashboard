@@ -18,7 +18,7 @@ A: Because European organizations increasingly need to show accountability, cont
 
 ## Q: What is the biggest risk in this project?
 
-A: The biggest limitation is that it is a demonstration project, not a live enterprise GRC platform. It does not replace enterprise tools, but it shows the logic and thinking behind governance programs.
+A: It is a small-organization operational starter with persistent records, role-based access, control CRUD, audit events, and PostgreSQL deployment. It is still not a mature enterprise GRC platform: it lacks SSO/MFA, multi-tenant isolation, high availability, and load testing. The user-count target is not a capacity guarantee.
 
 ## Q: How would you explain this to a non-technical stakeholder?
 

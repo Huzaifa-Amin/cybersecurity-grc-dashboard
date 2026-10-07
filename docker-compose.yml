@@ -1,10 +1,37 @@
 services:
   grc-dashboard:
     build: .
-    container_name: grc-dashboard
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
     ports:
-      - "8501:8501"
-    volumes:
-      - .:/app
+      - "127.0.0.1:8501:8501"
     environment:
-      - PYTHONUNBUFFERED=1
+      PYTHONUNBUFFERED: "1"
+      DATABASE_URL: postgresql+psycopg://grc_dashboard:${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}@database:5432/grc_dashboard
+      BOOTSTRAP_ADMIN_TOKEN: ${BOOTSTRAP_ADMIN_TOKEN:?Set BOOTSTRAP_ADMIN_TOKEN in .env}
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  database:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: grc_dashboard
+      POSTGRES_USER: grc_dashboard
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - grc_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U grc_dashboard -d grc_dashboard"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    security_opt:
+      - no-new-privileges:true
+
+volumes:
+  grc_postgres_data:

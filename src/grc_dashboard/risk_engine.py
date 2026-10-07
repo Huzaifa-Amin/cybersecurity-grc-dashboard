@@ -2,8 +2,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from statistics import mean
-from typing import Iterable, Mapping, Any
-
+from typing import Any, Iterable, Mapping
 
 RISK_RATING_ORDER = [
     ("Low", 0),
@@ -23,17 +22,20 @@ def compute_overall_score(controls: Iterable[Mapping[str, Any]]) -> float:
 def prioritize_controls(controls: Iterable[Mapping[str, Any]]) -> list[dict]:
     ranked = []
     for control in controls:
-        level_value = {
-            label: index for index, (label, _) in enumerate(RISK_RATING_ORDER)
-        }.get(control.get("risk_level", "Low"), 0)
-        ranked.append({
-            "id": control["id"],
-            "control": control["control"],
-            "risk_level": control.get("risk_level", "Low"),
-            "status_score": control.get("status_score", 0),
-            "priority_score": (level_value * 25) + (100 - control.get("status_score", 0)),
-            "owner": control.get("owner", "Unassigned"),
-        })
+        risk_level = control.get("risk_level", "Critical")
+        level_value = {label: index for index, (label, _) in enumerate(RISK_RATING_ORDER)}.get(
+            risk_level, len(RISK_RATING_ORDER) - 1
+        )
+        ranked.append(
+            {
+                "id": control["id"],
+                "control": control["control"],
+                "risk_level": risk_level,
+                "status_score": control.get("status_score", 0),
+                "priority_score": (level_value * 25) + (100 - control.get("status_score", 0)),
+                "owner": control.get("owner", "Unassigned"),
+            }
+        )
     return sorted(ranked, key=lambda item: item["priority_score"], reverse=True)
 
 
@@ -45,13 +47,14 @@ def map_controls_by_framework(controls: Iterable[Mapping[str, Any]]) -> dict[str
 
 
 def summarize_risk_register(controls: Iterable[Mapping[str, Any]]) -> dict[str, float | int]:
-    total = len(list(controls))
+    records = list(controls)
+    total = len(records)
     low = 0
     moderate = 0
     high = 0
     critical = 0
-    for control in controls:
-        rating = control.get("risk_level", "Low")
+    for control in records:
+        rating = control.get("risk_level", "Critical")
         if rating == "Low":
             low += 1
         elif rating == "Moderate":

@@ -1,0 +1,21 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" rx="28" fill="#F7FFF9"/>
+  <rect x="70" y="70" width="1060" height="490" rx="22" fill="white" stroke="#D8F5DF"/>
+  <rect x="110" y="110" width="152" height="44" rx="22" fill="#16A34A"/>
+  <text x="140" y="139" fill="white" font-family="Arial, sans-serif" font-size="24" font-weight="700" letter-spacing="2">SECURE</text>
+  <text x="110" y="220" fill="#1F2D1F" font-family="Arial, sans-serif" font-size="52" font-weight="700">Cybersecurity GRC</text>
+  <text x="110" y="275" fill="#1F2D1F" font-family="Arial, sans-serif" font-size="52" font-weight="700">Dashboard</text>
+  <text x="110" y="335" fill="#5F6F5E" font-family="Arial, sans-serif" font-size="28">Governance • Risk • Compliance • Evidence</text>
+  <rect x="110" y="380" width="210" height="95" rx="18" fill="#ECFDF5" stroke="#BBF7D0"/>
+  <rect x="350" y="380" width="210" height="95" rx="18" fill="#ECFDF5" stroke="#BBF7D0"/>
+  <rect x="590" y="380" width="210" height="95" rx="18" fill="#ECFDF5" stroke="#BBF7D0"/>
+  <rect x="830" y="380" width="210" height="95" rx="18" fill="#ECFDF5" stroke="#BBF7D0"/>
+  <text x="160" y="430" fill="#1F2D1F" font-family="Arial, sans-serif" font-size="24" font-weight="700">78.3%</text>
+  <text x="155" y="456" fill="#5F6F5E" font-family="Arial, sans-serif" font-size="18">Control score</text>
+  <text x="400" y="430" fill="#1F2D1F" font-family="Arial, sans-serif" font-size="24" font-weight="700">22</text>
+  <text x="390" y="456" fill="#5F6F5E" font-family="Arial, sans-serif" font-size="18">Open gaps</text>
+  <text x="640" y="430" fill="#1F2D1F" font-family="Arial, sans-serif" font-size="24" font-weight="700">1</text>
+  <text x="622" y="456" fill="#5F6F5E" font-family="Arial, sans-serif" font-size="18">High risk</text>
+  <text x="880" y="430" fill="#1F2D1F" font-family="Arial, sans-serif" font-size="24" font-weight="700">4</text>
+  <text x="866" y="456" fill="#5F6F5E" font-family="Arial, sans-serif" font-size="18">Frameworks</text>
+</svg>
