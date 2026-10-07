@@ -19,6 +19,7 @@ Check the startup output for syntax/import errors and confirm the configured wor
 - Docker Compose: inspect `docker compose ps`, `docker compose logs database`, and `docker compose logs grc-dashboard`.
 - Confirm `.env` contains both required, non-placeholder values. PostgreSQL passwords should be hexadecimal as documented so the URL remains valid.
 - Do not delete a production database or volume to resolve a connection issue. Take a backup and diagnose first.
+- If logs report `table organizations already exists` while the recorded Alembic revision is still `0001_initial`, a previous SQLite migration may have stopped after creating the empty workspace table. Stop the app, back up the SQLite file, install the current code, and retry startup; the current migration can reuse that specifically partial table. Never drop the table or mark a revision by hand. If other migration objects/columns are already present, preserve the database and investigate the schema/logs before attempting repair.
 
 ## First administrator setup is locked
 
@@ -35,6 +36,14 @@ Check that required labels are filled, the control ID is unique, the score is an
 ## Dashboard metrics or register look empty
 
 Review the framework/domain/risk/search filters in the sidebar. Metrics follow the filtered set. On a genuinely new database, starter controls are seeded once; deleting all controls afterward leaves the register empty on restart.
+
+## Workspace or group access is missing
+
+Ask a workspace administrator to verify the account has an active membership in the selected organization. Roles do not automatically carry over between organizations. Groups can grant viewer/editor permissions only; an administrator must be directly assigned to that workspace.
+
+## CISA feed is unavailable or a CVE appears relevant
+
+The Threat intelligence page retrieves official public CISA feeds on demand and caches them for up to one hour. Check application egress DNS/HTTPS access and the displayed error/source timestamp. A KEV entry does not confirm that your inventory is affected; verify vendor/product/version information in your own asset inventory before recording triage.
 
 ## Tests, lint, or CI fail
 

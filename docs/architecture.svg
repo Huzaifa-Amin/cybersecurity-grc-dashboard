@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 500" role="img" aria-labelledby="title desc">
-  <title id="title">Northstar architecture diagram</title>
-  <desc id="desc">Browser to Streamlit application, role and validation services, SQLAlchemy persistence, and PostgreSQL for teams or SQLite for local use, with audit events.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 560" role="img" aria-labelledby="title desc">
+  <title id="title">Northstar multi-organization architecture</title>
+  <desc id="desc">Workspace members access a Streamlit app that enforces organization membership and group roles before scoped GRC services read or write PostgreSQL. Official CISA feeds provide public threat context. Writes record workspace audit events and control history.</desc>
   <defs>
     <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#142b49"/>
@@ -17,37 +17,47 @@
       <feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#142b49" flood-opacity=".10"/>
     </filter>
   </defs>
-  <rect width="1440" height="500" rx="24" fill="#f3f7fb"/>
-  <text x="62" y="67" fill="#142b49" font-family="Arial,sans-serif" font-size="27" font-weight="700">One workflow, clear trust boundaries</text>
-  <text x="62" y="96" fill="#52647a" font-family="Arial,sans-serif" font-size="14">Named users · server-side permission checks · validated records · durable storage</text>
+  <rect width="1440" height="560" rx="24" fill="#f3f7fb"/>
+  <text x="58" y="62" fill="#142b49" font-family="Arial,sans-serif" font-size="27" font-weight="700">One deployment · isolated organization workspaces</text>
+  <text x="58" y="91" fill="#52647a" font-family="Arial,sans-serif" font-size="14">Every data service checks membership and effective role, then scopes reads and writes to the selected organization.</text>
   <g filter="url(#shadow)">
-    <rect x="55" y="160" width="220" height="172" rx="18" fill="url(#navy)"/>
-    <rect x="350" y="160" width="260" height="172" rx="18" fill="url(#teal)"/>
-    <rect x="685" y="125" width="300" height="108" rx="18" fill="#fff" stroke="#dbe4ef"/>
-    <rect x="685" y="260" width="300" height="108" rx="18" fill="#fff" stroke="#dbe4ef"/>
-    <rect x="1060" y="160" width="320" height="172" rx="18" fill="#247a56"/>
+    <rect x="55" y="168" width="205" height="170" rx="18" fill="url(#navy)"/>
+    <rect x="320" y="168" width="245" height="170" rx="18" fill="url(#teal)"/>
+    <rect x="625" y="116" width="270" height="106" rx="16" fill="#fff" stroke="#dbe4ef"/>
+    <rect x="625" y="254" width="270" height="106" rx="16" fill="#fff" stroke="#dbe4ef"/>
+    <rect x="965" y="168" width="250" height="170" rx="18" fill="#247a56"/>
+    <rect x="1270" y="168" width="125" height="170" rx="18" fill="#fff" stroke="#dbe4ef"/>
   </g>
-  <text x="165" y="215" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">People</text>
-  <text x="165" y="246" text-anchor="middle" fill="#dcebf4" font-family="Arial,sans-serif" font-size="14">Browser session</text>
-  <text x="165" y="274" text-anchor="middle" fill="#dcebf4" font-family="Arial,sans-serif" font-size="12">Viewer · Editor · Admin</text>
-  <text x="480" y="213" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">Streamlit application</text>
-  <text x="480" y="244" text-anchor="middle" fill="#e6fbfb" font-family="Arial,sans-serif" font-size="14">Dashboard · forms · CSV export</text>
-  <text x="480" y="272" text-anchor="middle" fill="#e6fbfb" font-family="Arial,sans-serif" font-size="12">Session verification · role-gated UI</text>
-  <text x="835" y="166" text-anchor="middle" fill="#142b49" font-family="Arial,sans-serif" font-size="17" font-weight="700">Identity &amp; permissions</text>
-  <text x="835" y="195" text-anchor="middle" fill="#52647a" font-family="Arial,sans-serif" font-size="13">PBKDF2 password hashes · least privilege</text>
-  <text x="835" y="301" text-anchor="middle" fill="#142b49" font-family="Arial,sans-serif" font-size="17" font-weight="700">GRC domain services</text>
-  <text x="835" y="330" text-anchor="middle" fill="#52647a" font-family="Arial,sans-serif" font-size="13">Validation · maturity · risk prioritization</text>
-  <text x="1220" y="214" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">Database</text>
-  <text x="1220" y="246" text-anchor="middle" fill="#e4f5eb" font-family="Arial,sans-serif" font-size="14">PostgreSQL · shared deployment</text>
-  <text x="1220" y="274" text-anchor="middle" fill="#e4f5eb" font-family="Arial,sans-serif" font-size="12">SQLite · local development/tests</text>
-  <line x1="276" y1="246" x2="340" y2="246" stroke="#6d91a8" stroke-width="4" marker-end="url(#arrow)"/>
-  <line x1="611" y1="210" x2="675" y2="180" stroke="#6d91a8" stroke-width="4" marker-end="url(#arrow)"/>
-  <line x1="611" y1="282" x2="675" y2="314" stroke="#6d91a8" stroke-width="4" marker-end="url(#arrow)"/>
-  <line x1="986" y1="180" x2="1050" y2="212" stroke="#6d91a8" stroke-width="4" marker-end="url(#arrow)"/>
-  <line x1="986" y1="314" x2="1050" y2="278" stroke="#6d91a8" stroke-width="4" marker-end="url(#arrow)"/>
-  <rect x="350" y="405" width="1030" height="54" rx="13" fill="#e6f5f5"/>
-  <circle cx="379" cy="432" r="7" fill="#087e8b"/>
-  <text x="398" y="437" fill="#124b52" font-family="Arial,sans-serif" font-size="13" font-weight="700">Transactional writes also create an application audit event</text>
-  <text x="62" y="437" fill="#52647a" font-family="Arial,sans-serif" font-size="12">No evidence files stored</text>
-  <text x="62" y="458" fill="#52647a" font-family="Arial,sans-serif" font-size="12">References only</text>
+  <text x="157" y="220" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">People</text>
+  <text x="157" y="250" text-anchor="middle" fill="#dcebf4" font-family="Arial,sans-serif" font-size="14">Signed-in accounts</text>
+  <text x="157" y="278" text-anchor="middle" fill="#dcebf4" font-family="Arial,sans-serif" font-size="12">Workspace membership</text>
+  <text x="157" y="302" text-anchor="middle" fill="#dcebf4" font-family="Arial,sans-serif" font-size="12">Viewer · Editor · Admin</text>
+  <text x="442" y="218" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">Streamlit application</text>
+  <text x="442" y="249" text-anchor="middle" fill="#e6fbfb" font-family="Arial,sans-serif" font-size="14">Overview · Controls · Actions</text>
+  <text x="442" y="277" text-anchor="middle" fill="#e6fbfb" font-family="Arial,sans-serif" font-size="12">Threat intelligence · Admin</text>
+  <text x="760" y="158" text-anchor="middle" fill="#142b49" font-family="Arial,sans-serif" font-size="17" font-weight="700">Identity &amp; access</text>
+  <text x="760" y="187" text-anchor="middle" fill="#52647a" font-family="Arial,sans-serif" font-size="13">Direct roles + workspace groups</text>
+  <text x="760" y="296" text-anchor="middle" fill="#142b49" font-family="Arial,sans-serif" font-size="17" font-weight="700">Scoped GRC services</text>
+  <text x="760" y="325" text-anchor="middle" fill="#52647a" font-family="Arial,sans-serif" font-size="13">Validation · risk · audit · history</text>
+  <text x="1090" y="218" text-anchor="middle" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">PostgreSQL</text>
+  <text x="1090" y="249" text-anchor="middle" fill="#e4f5eb" font-family="Arial,sans-serif" font-size="14">Organizations &amp; memberships</text>
+  <text x="1090" y="277" text-anchor="middle" fill="#e4f5eb" font-family="Arial,sans-serif" font-size="12">Controls · triage · audit history</text>
+  <text x="1332" y="218" text-anchor="middle" fill="#142b49" font-family="Arial,sans-serif" font-size="15" font-weight="700">CISA</text>
+  <text x="1332" y="247" text-anchor="middle" fill="#52647a" font-family="Arial,sans-serif" font-size="12">Public HTTPS</text>
+  <text x="1332" y="273" text-anchor="middle" fill="#52647a" font-family="Arial,sans-serif" font-size="12">KEV catalog</text>
+  <text x="1332" y="296" text-anchor="middle" fill="#52647a" font-family="Arial,sans-serif" font-size="12">Advisories</text>
+  <line x1="261" y1="252" x2="310" y2="252" stroke="#6d91a8" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="566" y1="210" x2="615" y2="178" stroke="#6d91a8" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="566" y1="296" x2="615" y2="306" stroke="#6d91a8" stroke-width="4" marker-end="url(#arrow)"/>
+  <line x1="896" y1="306" x2="955" y2="278" stroke="#6d91a8" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M1332 339V389H442V348" fill="none" stroke="#6d91a8" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+  <text x="875" y="381" text-anchor="middle" fill="#52647a" font-family="Arial,sans-serif" font-size="12">On-demand official-feed retrieval over HTTPS</text>
+  <rect x="55" y="414" width="1340" height="82" rx="15" fill="#e6f5f5"/>
+  <circle cx="85" cy="455" r="8" fill="#087e8b"/>
+  <text x="108" y="451" fill="#124b52" font-family="Arial,sans-serif" font-size="15" font-weight="700">Organization boundary</text>
+  <text x="108" y="475" fill="#315d63" font-family="Arial,sans-serif" font-size="13">Control IDs can repeat by workspace; membership/group checks protect scoped data services.</text>
+  <line x1="744" y1="432" x2="744" y2="478" stroke="#b5dada"/>
+  <text x="780" y="451" fill="#124b52" font-family="Arial,sans-serif" font-size="15" font-weight="700">Provenance &amp; limits</text>
+  <text x="780" y="475" fill="#315d63" font-family="Arial,sans-serif" font-size="13">CISA entries are public context, not evidence of local exposure; feeds are cached for up to one hour.</text>
+  <text x="58" y="533" fill="#52647a" font-family="Arial,sans-serif" font-size="12">Evidence files are not stored · SQLite is used for local development and tests · PostgreSQL is the shared deployment database</text>
 </svg>

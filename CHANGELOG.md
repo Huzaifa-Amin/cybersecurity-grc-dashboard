@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- Added organization-isolated workspaces, membership roles, group-based viewer/editor access, and workspace administration
+- Added analyst-entered likelihood/impact risk scoring, control history, remediation guidance, and expanded dashboard metrics
+- Added official CISA KEV/advisory feeds with bounded retrieval, source provenance, caching, and workspace-specific analyst triage
+- Added migration backfill and partial-startup recovery coverage, plus cross-workspace isolation tests
 - Added persistent PostgreSQL/SQLite storage, versioned migrations, and control CRUD
 - Added least-privilege viewer/editor/administrator accounts, first-run token protection, and audit events
 - Added temporary-password lifecycle and administrator account reset flow

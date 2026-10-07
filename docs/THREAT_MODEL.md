@@ -2,52 +2,67 @@
 
 ## System and scope
 
-Northstar supports one organization using a shared GRC control register. The Compose target is one Streamlit app instance connected to PostgreSQL; local development and automated tests may use SQLite. Users access the app through a browser. Application-managed sessions and role checks protect dashboard actions.
+Northstar is a single application deployment that can host multiple organization workspaces. It stores GRC control and risk records, named user accounts, group memberships, audit/history records, and organization-specific triage for public vulnerability identifiers. PostgreSQL is intended for shared deployment; SQLite supports local use and automated tests.
 
-Out of scope: endpoint protection, SIEM/SOC monitoring, identity-provider services, legal interpretation, evidence document storage, multi-tenant separation, and formal compliance certification.
+The application is not a compliance certification service, a security monitoring/response platform, an asset inventory, or an evidence document repository. Public CISA feeds are reference data: a listing does not establish that any organization is exposed.
 
 ## Assets
 
-- Control descriptions, owners, maturity scores, risks, remediation dates, and notes
-- Usernames, account roles, password hashes, and account status
-- Audit events and database credentials
-- Bootstrap token and database backup files
-- Evidence references, which may themselves reveal internal system/document naming
+- Organization-scoped controls, ownership, maturity, residual risk, due dates, notes, evidence references, and vulnerability triage
+- Global user credentials/hashes and per-organization direct/group permissions
+- Organization-scoped audit and control history
+- Database credentials, bootstrap token, database files, and backups
+- Public threat-feed responses, their source links, version/date metadata, and retrieval timestamps
 
 ## Trust boundaries and actors
 
-- **Unauthenticated browser:** may reach first-admin setup only while no user accounts exist; setup requires the operator's bootstrap token.
-- **Authenticated viewer:** may read and export the filtered register.
-- **Authenticated editor:** may create and update controls.
-- **Authenticated administrator:** may delete controls, manage accounts, and read the audit view.
-- **New or reset account:** must replace its temporary password before accessing the dashboard.
-- **Application container:** validates inputs, enforces roles, and connects to the configured database.
-- **Database and backup storage:** hold durable records and require access controls independent from the app login.
-- **Reverse proxy / network:** must provide TLS and restrict remote reachability; Compose's host port is loopback-bound by default.
+- **Unauthenticated browser:** can sign in or claim initial administration only before an account exists and only with the operator-configured bootstrap token.
+- **Authenticated viewer:** can read and export data for active organization memberships.
+- **Authenticated editor:** adds control records, updates them, and records vulnerability triage for workspaces where editor access is effective.
+- **Authenticated organization administrator:** provisions members, groups, and workspaces; deletes controls; manages audit visibility. Administrator privileges are directly assigned, never granted by groups.
+- **CISA public HTTPS endpoints:** provide upstream public catalog and advisory data; the app validates response size and basic structure and preserves provenance.
+- **Application process:** is responsible for session checks, service-layer authorization, organization scoping, validation, and database transactions.
+- **Database and backups:** hold all workspaces' durable data and must be protected independently of app roles.
+- **Reverse proxy / network:** must provide TLS and restrict remote access; Compose's host port is loopback-bound by default.
+
+## Tenant-isolation invariants
+
+1. Every read/write affecting controls, audit events, history, or triage specifies an organization ID and checks the actor's active membership and effective role.
+2. A user can select only organizations for which their own active membership is verified.
+3. Group creation and membership management are organization-admin-only. Group roles are limited to viewer/editor and group members must be active members of that same organization.
+4. Usernames identify global accounts; direct membership roles and group roles are workspace-specific.
+5. Control IDs may be reused in different organizations; composite database keys and organization-scoped queries prevent cross-workspace collisions.
+6. A workspace must retain an active direct administrator; group access cannot substitute for an administrator.
+7. Tests cover cross-workspace control and triage isolation, repeated control IDs, group permission boundaries, and migration backfill.
 
 ## Threats and treatment
 
 | Threat | Current treatment | Residual risk |
 |---|---|---|
-| First user claims administrator access | First account requires a separately configured bootstrap token; no default account/password exists. | Operator must protect the token and restrict reachability during setup. |
-| User receives excessive permissions | Viewer, editor, and administrator capability boundaries; account deactivation and last-admin safeguard. | Admins can assign administrator access; periodic review is required. |
-| Password disclosure or database theft | Random salted PBKDF2-HMAC-SHA-256 hashes; no plaintext password storage; new/reset users must change temporary passwords. | No MFA, identity federation, e-mail recovery, or shared rate limiting. Administrators must transfer temporary credentials securely. |
-| Forged or invalid control writes | SQLAlchemy bound parameters, field validation, database constraints, XSRF/CORS defaults enabled. | App and runtime still need patching and a correctly configured proxy. |
-| Denial of service or brute-force attempts | Expensive password hashing, bounded user inputs, connection timeout, Compose service health checks. | No distributed request throttling, WAF, high availability, or capacity test. |
-| Unauthorized evidence disclosure | No file upload or file-serving feature; evidence stored as references only. | References and notes can still disclose internal information; database access remains sensitive. |
-| Undetected record changes | Actor/action/entity/timestamp audit events are written with mutations. | The database administrator can alter the audit table; no external immutable audit sink. |
-| Database loss or accidental deletion | PostgreSQL named volume persists across app container restarts; runbook documents logical backups. | A volume is not a backup; operators must protect backups and test restoration. |
-| Misleading compliance score or mapping | Score formula is documented and described as decision support; sample data is explicitly illustrative. | Owners must validate mapping, evidence, applicability, and conclusions. |
+| Unauthorized first administrator | First account requires a high-entropy configured token; no default credentials. | Operators must protect the token and restrict exposure during initial setup. |
+| Cross-organization disclosure or modification | Data services scope queries and mutations by organization and enforce membership/role; migration and service tests cover isolation. | Requires ongoing review of each new data path; a database administrator can bypass application checks. |
+| Group grants excessive privilege | Groups can grant viewer/editor only; administrator is direct membership only; group administration requires direct/effective workspace admin. | Administrators can still assign direct administrator membership and must review access. |
+| Account compromise or stolen database | Salted PBKDF2-HMAC-SHA-256 hashes, password policy, account status and authorization-version checks, forced change of temporary passwords. | No MFA, identity federation, self-service recovery, or distributed login throttling. |
+| Invalid or forged record writes | Service-layer role checks, field validation, SQLAlchemy bound parameters, and database constraints. | Keep dependencies current and apply TLS/network controls in deployed environments. |
+| Incorrectly inferred vulnerability exposure | Official source links and retrieval timestamps; triage is separate and workspace-scoped; no automatic asset match or exposure claim. | Analysts must validate affected product/version against their own inventory and vendor guidance. |
+| Stale/unavailable upstream intelligence | HTTPS, request timeout, bounded response size, structural validation, one-hour cache, and visible feed errors. | Feed availability and source publication cadence are external; one-hour caching is not real-time monitoring. |
+| Denial of service / brute force | Password hashing cost, bounded inputs and feed payloads, connection timeout, and service health checks. | No WAF, distributed throttling, high availability, or load test. |
+| Evidence or sensitive notes exposed | No file upload/serving; role- and organization-scoped references. | References and notes can disclose internal metadata; minimize sensitive content and protect backups. |
+| Audit tampering or repudiation | Successful supported changes record actor/action/entity/time in a database transaction. | The DB administrator can edit audit records; no external immutable sink or cryptographic chain. |
+| Database loss or migration failure | Versioned Alembic migrations, data backfill tests, persistent PostgreSQL volume, documented logical backups. | A volume is not a backup; restore and PostgreSQL migration behavior need testing at deployment. |
+| Misleading risk/compliance result | Documented human-entered likelihood/impact, separate residual risk, transparent sorting heuristic, and disclaimers. | Owners must validate assumptions, evidence, mappings, applicability, and treatment decisions. |
 
 ## Required deployment controls
 
-1. Use TLS and an authenticated, restricted reverse proxy for non-local access.
+1. Use TLS and a restricted authenticated reverse proxy for non-local access.
 2. Use unique high-entropy database and bootstrap secrets; keep them out of source control and rotate them under an approved process.
-3. Limit database network access and protect backups with appropriate access and encryption.
-4. Assign least-privilege roles; review and deactivate accounts regularly.
-5. Test backup restoration and monitor application/database health and logs.
-6. Do not store evidence files, credentials, or sensitive personal data in the app.
+3. Limit database network access and encrypt/protect backups with access controls comparable to production data.
+4. Review organization admins, direct roles, groups, and members periodically; remove stale access promptly.
+5. Back up before migrations and test restore procedures on a separate database.
+6. Monitor app/database health and logs. Treat feed errors as unavailable external data, not as a clean bill of health.
+7. Keep evidence files and secrets in approved systems. Store only safe references in Northstar.
+8. Review CISA findings against the organization's inventory and authoritative vendor advisories before taking action.
 
 ## Known gaps
 
-No SSO/MFA, invitation workflow, self-service recovery, distributed login throttling, external append-only audit service, load/performance validation, multi-tenant data isolation, or high-availability deployment is included. The target of fewer than 1,000 registered users is not a performance guarantee.
+No SSO/MFA, e-mail invitations, self-service recovery, distributed login throttling, external append-only audit service, evidence-file storage, asset inventory/exposure matching, high availability, independent penetration test, or production load test is included. Fewer than 1,000 registered users is a design target only, not a performance guarantee.

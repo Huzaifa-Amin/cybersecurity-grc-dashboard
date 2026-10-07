@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
   <title id="title">Northstar Cybersecurity GRC Workspace</title>
-  <desc id="desc">Northstar is a role-based governance, risk, and compliance workspace for shared controls, risk prioritization, evidence references, and auditability.</desc>
+  <desc id="desc">Northstar is a multi-organization governance, risk, and compliance workspace with isolated controls, group permissions, risk prioritization, evidence references, and sourced CISA threat context.</desc>
   <defs>
     <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#142b49"/>
@@ -25,19 +25,19 @@
   <text x="145" y="93" fill="#e7f5f8" font-family="Arial,sans-serif" font-size="14" font-weight="700" letter-spacing="3">NORTHSTAR · CYBER GRC</text>
   <text x="76" y="216" fill="#fff" font-family="Arial,sans-serif" font-size="51" font-weight="700">Governance, risk,</text>
   <text x="76" y="276" fill="#fff" font-family="Arial,sans-serif" font-size="51" font-weight="700">and controls in view.</text>
-  <text x="80" y="328" fill="#d7e7f0" font-family="Arial,sans-serif" font-size="20">A persistent, role-aware GRC workspace for one organization.</text>
+  <text x="80" y="328" fill="#d7e7f0" font-family="Arial,sans-serif" font-size="20">Organization-isolated workspaces for small teams.</text>
   <rect x="76" y="386" width="246" height="94" rx="15" fill="#fff" fill-opacity=".09" stroke="#fff" stroke-opacity=".2"/>
   <rect x="340" y="386" width="246" height="94" rx="15" fill="#fff" fill-opacity=".09" stroke="#fff" stroke-opacity=".2"/>
   <rect x="604" y="386" width="246" height="94" rx="15" fill="#fff" fill-opacity=".09" stroke="#fff" stroke-opacity=".2"/>
   <rect x="868" y="386" width="246" height="94" rx="15" fill="#fff" fill-opacity=".09" stroke="#fff" stroke-opacity=".2"/>
   <text x="98" y="423" fill="#9ce1d9" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1">ACCESS</text>
-  <text x="98" y="454" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">Least privilege</text>
-  <text x="362" y="423" fill="#9ce1d9" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1">OPERATIONS</text>
-  <text x="362" y="454" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">Persistent data</text>
-  <text x="626" y="423" fill="#9ce1d9" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1">ASSURANCE</text>
-  <text x="626" y="454" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">Risk &amp; evidence</text>
-  <text x="890" y="423" fill="#9ce1d9" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1">DEPLOYMENT</text>
-  <text x="890" y="454" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">PostgreSQL</text>
+  <text x="98" y="454" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">Roles &amp; groups</text>
+  <text x="362" y="423" fill="#9ce1d9" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1">WORKSPACES</text>
+  <text x="362" y="454" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">Tenant isolation</text>
+  <text x="626" y="423" fill="#9ce1d9" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1">RISK</text>
+  <text x="626" y="454" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">Likelihood × impact</text>
+  <text x="890" y="423" fill="#9ce1d9" font-family="Arial,sans-serif" font-size="13" font-weight="700" letter-spacing="1">INTELLIGENCE</text>
+  <text x="890" y="454" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">Official CISA feeds</text>
   <line x1="76" y1="531" x2="1120" y2="531" stroke="#fff" stroke-opacity=".2"/>
   <text x="78" y="567" fill="#d7e7f0" font-family="Arial,sans-serif" font-size="14">Python · Streamlit · SQLAlchemy · Alembic</text>
   <text x="1115" y="567" text-anchor="end" fill="#a9c3d2" font-family="Arial,sans-serif" font-size="13">Open-source project · MIT</text>

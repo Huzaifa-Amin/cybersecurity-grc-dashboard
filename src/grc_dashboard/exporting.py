@@ -15,6 +15,8 @@ CONTROL_EXPORT_FIELDS = (
     "owner",
     "status",
     "status_score",
+    "likelihood",
+    "impact",
     "risk_level",
     "due_date",
     "evidence",
