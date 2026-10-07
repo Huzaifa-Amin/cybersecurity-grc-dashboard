@@ -56,6 +56,20 @@ Keep the generated bootstrap token available for initial setup. On the first app
 
 Compose persists PostgreSQL data in the `grc_postgres_data` named volume. Alembic applies pending schema migrations during app startup. The dashboard port binds to loopback only. For use by remote people, put the app behind an HTTPS reverse proxy with appropriate access controls and a firewall; do not publish the raw app port to the public internet. Configure `BOOTSTRAP_ADMIN_TOKEN` before first run. Once the first user exists, the first-run route is no longer available.
 
+## Hosted deployment with Render
+
+The root `render.yaml` Blueprint creates one Docker web service and one managed PostgreSQL database. A Render account authorized for this GitHub repository is required. The configured `starter` web and `basic-256mb` database plans may incur ongoing charges; review current provider prices, plan limits, and region availability before approving resource creation.
+
+1. Sign in to Render and choose **New → Blueprint**.
+2. Connect `Huzaifa-Amin/cybersecurity-grc-dashboard` and select the `master` branch.
+3. Review the `northstar-grc` web service and `northstar-grc-db` database, including their costs, region, network access, and persistent storage. Provision only after the plan is acceptable.
+4. Wait for the image build, database startup, migration, and health check. Open the generated service URL and retrieve the generated `BOOTSTRAP_ADMIN_TOKEN` from the service environment settings.
+5. Enter the token in the first-admin setup page and create the initial workspace and administrator. Do not put the token into a public issue, chat, or source file.
+6. Remove `BOOTSTRAP_ADMIN_TOKEN` from the hosted service environment and redeploy after first-admin setup. Then create named users, organization memberships, and viewer/editor groups through the application.
+7. Verify sign-in, workspace scoping, control create/edit, CSV export, restart persistence, and PostgreSQL backup/restore before inviting other people.
+
+The hosted database is separate from local SQLite; existing local accounts, passwords, controls, and audit events are not transferred. Use a documented and separately reviewed migration plan if organizational records must be moved. Keep the hosted URL protected by sign-in, and do not store evidence files or secrets in Northstar.
+
 ## Workspaces, roles, and data handling
 
 - A deployment can host multiple organizations. Each organization has isolated control data, members, groups, audit events, control history, and vulnerability-triage status.

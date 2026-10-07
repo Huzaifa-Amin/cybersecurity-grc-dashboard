@@ -1,0 +1,21 @@
+databases:
+  - name: northstar-grc-db
+    region: oregon
+    plan: basic-256mb
+    databaseName: grc_dashboard
+    user: grc_dashboard
+
+services:
+  - type: web
+    name: northstar-grc
+    region: oregon
+    runtime: docker
+    plan: starter
+    healthCheckPath: /_stcore/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: northstar-grc-db
+          property: connectionString
+      - key: BOOTSTRAP_ADMIN_TOKEN
+        generateValue: true

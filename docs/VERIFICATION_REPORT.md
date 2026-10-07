@@ -23,9 +23,9 @@ The CISA client is tested with mocked HTTP responses. A live external CISA feed 
 
 ## GitHub and hosting validation
 
-The separate Render hosting PR (#16) has passing GitHub CI and security checks on its latest commit, including the Docker image build, CodeQL, and dependency scan. Those checks validate the proposed container and repository workflows; they do not provision or verify a live Render service.
+GitHub Actions is configured to run tests/lint, CodeQL/dependency scans, and a Docker image build for pull requests. Passing those checks validates code and the container build; it does not provision or verify a live Render service.
 
-Render provisioning was not performed: a Render account/API authorization is not available in the environment, and the proposed managed web/database plans may incur charges. Review provider pricing and authorize the hosting account before creating live resources. The local app and data are not automatically copied to a hosted database.
+Render provisioning was not performed. The shared Render dashboard requires a sign-in/authorization step, and the proposed managed web/database plans may incur charges. Review provider pricing and complete the Render/GitHub authorization before creating live resources. The local app and data are not automatically copied to a hosted database.
 
 ## Remaining release checks
 

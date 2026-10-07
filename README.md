@@ -122,6 +122,16 @@ Open [http://127.0.0.1:8501](http://127.0.0.1:8501) and complete first-administr
 
 > **Important:** the CI workflow verifies that the Docker image builds. A live PostgreSQL/Compose deployment, backup-and-restore procedure, and capacity under real user load have not been validated in this environment. Complete those checks in the target hosting environment before production use.
 
+## Hosted deployment: Render
+
+GitHub hosts the source code; GitHub Pages cannot run the interactive Streamlit app or its database. The repository includes a Render Blueprint for the Docker app and managed PostgreSQL:
+
+<p align="center">
+  <a href="https://render.com/deploy?repo=https://github.com/Huzaifa-Amin/cybersecurity-grc-dashboard"><img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy Northstar to Render"></a>
+</p>
+
+Sign in to Render with an account authorized to access this repository, choose **New → Blueprint**, and review the proposed resources before provisioning. The Blueprint's `starter` web service and `basic-256mb` PostgreSQL plan may incur ongoing charges; check Render's current prices and region availability first. The hosted database is new: local SQLite users, passwords, and records are **not** copied. Use the generated bootstrap token for first-admin setup, remove that token after setup, and verify access, persistence, backups, and recovery before inviting users. See the [hosted deployment run-through](docs/SETUP.md#hosted-deployment-with-render).
+
 ## Risk and threat intelligence
 
 Likelihood and impact are entered by an analyst from 1–5; inherent risk is their product (1–25). Bands are Low (1–4), Moderate (5–9), High (10–16), and Critical (17–25). Residual risk is a separate analyst-entered label. The priority score combines residual severity with the remaining maturity gap:
