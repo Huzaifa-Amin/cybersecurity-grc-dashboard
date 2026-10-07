@@ -98,7 +98,7 @@
     .kpi b { display: block; color: var(--teal); font-size: 1.45rem; }
     .kpi span { color: var(--muted); font-size: .84rem; }
     .diagram { margin: 18px 0 2px; padding: 14px; border: 1px solid var(--line); border-radius: 14px; background: #f8fbfd; }
-    .diagram svg { display: block; width: 100%; height: auto; }
+    .diagram svg, .diagram img { display: block; width: 100%; height: auto; }
     .table-wrap { overflow-x: auto; margin: 13px 0; }
     table { width: 100%; border-collapse: collapse; font-size: .92rem; }
     th, td { padding: 11px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
@@ -154,11 +154,11 @@
     <header class="hero">
       <div class="eyebrow">Project report · Governance, risk &amp; compliance</div>
       <h1>Northstar Cybersecurity GRC Workspace</h1>
-      <p>A practical small-organization workspace for control maturity, ownership, remediation, risk prioritization, and evidence references.</p>
+      <p>A practical small-team platform for organization-isolated workspaces, control maturity, remediation, risk prioritization, and sourced threat context.</p>
       <div class="hero-meta">
-        <span>Single organization</span>
+        <span>Organization-isolated workspaces</span>
         <span>Target: fewer than 1,000 registered users</span>
-        <span>Python · Streamlit · PostgreSQL</span>
+        <span>Python · Streamlit · PostgreSQL · CISA feeds</span>
       </div>
     </header>
 
@@ -174,58 +174,35 @@
           <a href="#access">04 · Access model</a>
           <a href="#workflow">05 · User workflows</a>
           <a href="#scoring">06 · Risk logic</a>
-          <a href="#example">07 · Example</a>
-          <a href="#operations">08 · Operations</a>
-          <a href="#security">09 · Security &amp; limits</a>
-          <a href="#verification">10 · Verification</a>
+          <a href="#intelligence">07 · Threat intelligence</a>
+          <a href="#example">08 · Example</a>
+          <a href="#operations">09 · Operations</a>
+          <a href="#security">10 · Security &amp; limits</a>
+          <a href="#verification">11 · Verification</a>
         </div>
       </nav>
 
       <main>
         <section class="section" id="summary">
           <h2>01 · Executive summary</h2>
-          <p class="lead">Northstar brings a compact control register and a role-aware dashboard together for one organization's GRC work. It helps teams see who owns a control, how mature it is, what risk remains, when remediation is due, and where supporting evidence is held.</p>
+          <p class="lead">Northstar brings organization-isolated control registers, role-aware access, risk visibility, remediation tracking, and public threat context into one small-team deployment. Each workspace can manage its own members, groups, control history, audit events, and vulnerability triage.</p>
           <div class="kpis">
-            <div class="kpi"><b>3</b><span>Least-privilege account roles</span></div>
-            <div class="kpi"><b>4</b><span>Risk ratings: Low to Critical</span></div>
-            <div class="kpi"><b>1</b><span>Shared register with audit events</span></div>
-            <div class="kpi"><b>CSV</b><span>Filtered register export</span></div>
+            <div class="kpi"><b>3</b><span>Workspace roles; groups exclude admins</span></div>
+            <div class="kpi"><b>1–25</b><span>Analyst-entered likelihood × impact</span></div>
+            <div class="kpi"><b>1 hr</b><span>Maximum in-memory CISA feed cache</span></div>
+            <div class="kpi"><b>CSV</b><span>Workspace-scoped filtered export</span></div>
           </div>
-          <p>Illustrative starter records reference NIST CSF 2.0, ISO 27001 Annex A, NIS2, and GDPR. They are examples, not authoritative framework mappings. Teams can add their own domains, mappings, owners, maturity scores, due dates, and evidence references.</p>
+          <p>Illustrative starter records reference NIST CSF 2.0, ISO 27001 Annex A, NIS2, and GDPR. They are examples, not authoritative framework mappings. The design targets fewer than 1,000 registered users; this is not a measured capacity or service-level guarantee.</p>
+          <div class="diagram">
+            <img src="dashboard-preview.svg" alt="Illustrative workspace dashboard with organization switcher, risk metrics, domain charts, and prioritized controls">
+          </div>
         </section>
 
         <section class="section" id="architecture">
           <h2>02 · Architecture &amp; component responsibilities</h2>
-          <p>The browser connects to the Streamlit application. The app authenticates a named account, checks its role, validates submitted fields, and reads or writes through SQLAlchemy. PostgreSQL is the shared Docker Compose database; a local SQLite file keeps development and tests simple.</p>
+          <p>The browser connects to the Streamlit application. The app authenticates a named account, verifies active membership in the selected organization, computes the effective direct/group role, validates submitted fields, and runs organization-scoped SQLAlchemy operations. PostgreSQL is the shared Docker Compose database; local SQLite supports development and tests.</p>
           <div class="diagram">
-            <svg viewBox="0 0 920 320" role="img" aria-labelledby="diagram-title diagram-desc">
-              <title id="diagram-title">Northstar application architecture</title>
-              <desc id="diagram-desc">User browser connects to the Streamlit interface, which uses authentication and authorization, the GRC domain and risk engine, and SQLAlchemy to read and write PostgreSQL. An audit log records changes.</desc>
-              <defs>
-                <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#087e8b"/></marker>
-              </defs>
-              <rect x="20" y="100" width="170" height="100" rx="15" fill="#142b49"/>
-              <text x="105" y="139" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">People</text>
-              <text x="105" y="166" text-anchor="middle" fill="#dcebf4" font-size="13">Browser session</text>
-              <rect x="260" y="100" width="190" height="100" rx="15" fill="#087e8b"/>
-              <text x="355" y="139" text-anchor="middle" fill="#fff" font-size="17" font-weight="700">Streamlit app</text>
-              <text x="355" y="166" text-anchor="middle" fill="#e6fbfb" font-size="13">Dashboard and forms</text>
-              <rect x="520" y="32" width="180" height="100" rx="15" fill="#e6f5f5" stroke="#a9d9dc"/>
-              <text x="610" y="70" text-anchor="middle" fill="#142b49" font-size="16" font-weight="700">Access control</text>
-              <text x="610" y="96" text-anchor="middle" fill="#52647a" font-size="13">PBKDF2 + role checks</text>
-              <rect x="520" y="184" width="180" height="100" rx="15" fill="#eaf1f8" stroke="#c4d3e2"/>
-              <text x="610" y="222" text-anchor="middle" fill="#142b49" font-size="16" font-weight="700">GRC logic</text>
-              <text x="610" y="248" text-anchor="middle" fill="#52647a" font-size="13">Validation + risk engine</text>
-              <rect x="760" y="100" width="145" height="100" rx="15" fill="#247a56"/>
-              <text x="832" y="139" text-anchor="middle" fill="#fff" font-size="16" font-weight="700">Database</text>
-              <text x="832" y="166" text-anchor="middle" fill="#e4f5eb" font-size="13">Postgres / SQLite</text>
-              <line x1="190" y1="150" x2="252" y2="150" stroke="#087e8b" stroke-width="4" marker-end="url(#arrow)"/>
-              <line x1="450" y1="125" x2="512" y2="95" stroke="#087e8b" stroke-width="4" marker-end="url(#arrow)"/>
-              <line x1="450" y1="175" x2="512" y2="220" stroke="#087e8b" stroke-width="4" marker-end="url(#arrow)"/>
-              <line x1="700" y1="82" x2="752" y2="125" stroke="#087e8b" stroke-width="4" marker-end="url(#arrow)"/>
-              <line x1="700" y1="235" x2="752" y2="175" stroke="#087e8b" stroke-width="4" marker-end="url(#arrow)"/>
-              <text x="475" y="302" text-anchor="middle" fill="#52647a" font-size="13">Create, update, audit and query records through parameterized database operations</text>
-            </svg>
+            <img src="architecture.svg" alt="Architecture showing workspace authorization, organization-scoped records, database audit history, and external CISA feeds">
           </div>
           <div class="table-wrap">
             <table>
@@ -235,6 +212,7 @@
                 <tr><td><code>security.py</code></td><td>Username/password validation, salted password hashing, password verification, and reusable permission predicates.</td></tr>
                 <tr><td><code>store.py</code> + Alembic</td><td>Versioned SQLAlchemy schema, database initialization, seeded examples, field validation, persistent CRUD, and audit events.</td></tr>
                 <tr><td><code>risk_engine.py</code></td><td>Maturity aggregation, framework counts, risk summaries, and priority ordering.</td></tr>
+                <tr><td><code>intelligence.py</code></td><td>Bounded HTTPS retrieval, validation, provenance, and parsing of CISA KEV/advisories.</td></tr>
                 <tr><td>PostgreSQL / SQLite</td><td>PostgreSQL is shared Compose storage; SQLite is the local development and test adapter.</td></tr>
               </tbody>
             </table>
@@ -248,11 +226,15 @@
             <table>
               <thead><tr><th>Table</th><th>Main columns</th><th>Purpose and safeguards</th></tr></thead>
               <tbody>
-                <tr><td><code>users</code></td><td><code>id</code>, <code>username</code>, <code>display_name</code>, <code>password_hash</code>, <code>role</code>, <code>is_active</code>, <code>must_change_password</code>, <code>auth_version</code>, <code>created_at</code></td><td>Named local accounts. Unique usernames, constrained role values, salted password hashes, account disablement, forced temporary-password change, and session invalidation after account/password changes.</td></tr>
-                <tr><td><code>controls</code></td><td><code>id</code>, <code>control</code>, <code>domain</code>, <code>framework</code>, <code>owner</code>, <code>status</code>, <code>status_score</code>, <code>risk_level</code>, <code>due_date</code>, <code>evidence</code>, <code>note</code></td><td>Unique control register. Database checks constrain risk, status, and maturity; application validation checks required text and ISO dates.</td></tr>
-                <tr><td><code>audit_log</code></td><td><code>id</code>, <code>actor_username</code>, <code>action</code>, <code>entity_type</code>, <code>entity_id</code>, <code>details</code>, <code>created_at</code></td><td>Append-only application events for control changes, account changes, and password changes. Visible to administrators.</td></tr>
-                <tr><td><code>app_settings</code></td><td><code>key</code>, <code>value</code></td><td>Stores the one-time sample-data seed marker so an intentionally emptied register stays empty after restart.</td></tr>
-                <tr><td><code>alembic_version</code></td><td><code>version_num</code></td><td>Migration framework metadata that records the schema revision applied to this database.</td></tr>
+                <tr><td><code>users</code></td><td>Username, display name, password hash, global enabled state, forced-password-change flag, authorization version, created time</td><td>Global named account; passwords are salted hashes and workspaces use separate membership roles.</td></tr>
+                <tr><td><code>organizations</code></td><td>ID, name, unique slug, created time</td><td>Workspace boundary for GRC records and organization access.</td></tr>
+                <tr><td><code>organization_memberships</code></td><td>Organization ID, user ID, direct role, active flag, created time</td><td>One account may have a different direct role in each workspace.</td></tr>
+                <tr><td><code>groups</code> / <code>group_memberships</code></td><td>Organization ID, group ID, name, viewer/editor role, user ID</td><td>Reusable workspace access; administrator cannot be granted by a group.</td></tr>
+                <tr><td><code>controls</code></td><td>Organization ID + control ID, owner, status, maturity, likelihood, impact, residual risk, due date, evidence reference, notes, timestamps</td><td>Composite workspace/control key; database constraints and service validation protect data.</td></tr>
+                <tr><td><code>control_history</code></td><td>Organization, control ID, actor, status, maturity, residual risk, recorded time</td><td>Tracks each control create/edit event; it is not a daily portfolio snapshot.</td></tr>
+                <tr><td><code>audit_log</code></td><td>Organization, actor, action, entity, details, created time</td><td>Application event history shown to administrators in that workspace; not tamper-proof.</td></tr>
+                <tr><td><code>threat_triage</code></td><td>Organization + CVE, status, notes, updater, timestamp</td><td>Organization-specific analyst follow-up, distinct from shared public CISA source data.</td></tr>
+                <tr><td><code>app_settings</code> / <code>alembic_version</code></td><td>Setting key/value; current schema revision</td><td>Per-workspace starter-data marker and versioned migration metadata.</td></tr>
               </tbody>
             </table>
           </div>
@@ -261,7 +243,7 @@
 
         <section class="section" id="access">
           <h2>04 · Least-privilege access model</h2>
-          <p>Every authenticated action is associated with a named user. Permissions are intended to follow the work required now; administrators can change a user's role or deactivate an account when that need ends.</p>
+          <p>Every authenticated action is associated with a named user and an active workspace. Direct membership roles combine with group grants using the higher permission; administrator access must be direct. Administrators can change workspace roles or deactivate memberships when need ends.</p>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Capability</th><th><span class="role">Viewer</span></th><th><span class="role">Editor</span></th><th><span class="role">Administrator</span></th></tr></thead>
@@ -271,39 +253,60 @@
                 <tr><td>Create or update control records</td><td>No</td><td>Yes</td><td>Yes</td></tr>
                 <tr><td>Delete control records</td><td>No</td><td>No</td><td>Yes</td></tr>
                 <tr><td>Create, change, or deactivate user accounts</td><td>No</td><td>No</td><td>Yes</td></tr>
+                <tr><td>Create groups and manage group membership</td><td>No</td><td>No</td><td>Yes</td></tr>
+                <tr><td>Create organizations and add workspace members</td><td>No</td><td>No</td><td>Yes</td></tr>
                 <tr><td>Read the application audit history</td><td>No</td><td>No</td><td>Yes</td></tr>
               </tbody>
             </table>
           </div>
-          <p>Passwords require at least 12 characters and are stored as PBKDF2-HMAC-SHA-256 hashes with a random 16-byte salt and 600,000 iterations. There is no default account. A bootstrap token gates the first administrator. New accounts and administrator-reset accounts must change their temporary password before opening the dashboard. The application prevents demoting or disabling the last active administrator. Account or password changes increment an authentication version so existing sessions are rejected on their next request.</p>
+          <p>Groups can grant viewer/editor access, never administrator. A workspace must retain one active directly assigned administrator. Passwords require at least 12 characters and are stored as PBKDF2-HMAC-SHA-256 hashes with a random 16-byte salt and 600,000 iterations. There is no default account. New accounts and administrator-reset accounts must change their temporary password before opening the dashboard. Access changes increment an authentication version so sessions are rejected on their next request.</p>
           <div class="callout"><b>Operational boundary:</b> application-managed passwords do not provide SSO, MFA, e-mail verification, or self-service recovery. Administrators can reset another user's password; secure transfer of the temporary credential is an organizational responsibility. Use an identity provider when organizational policy requires stronger identity controls.</div>
         </section>
 
         <section class="section" id="workflow">
           <h2>05 · Main workflows</h2>
           <div class="steps">
-            <div class="step"><b>Initialize</b>The app creates its tables and seeds sample controls only when the register is empty.</div>
+            <div class="step"><b>Initialize</b>Alembic upgrades the schema and seeds illustrative controls once per workspace.</div>
             <div class="step"><b>Claim administration</b>The operator sets a bootstrap token out of band; the first administrator enters it during one-time setup.</div>
-            <div class="step"><b>Provision least privilege</b>An administrator creates individual accounts, assigns viewer, editor, or administrator access, and the user replaces their temporary password at first sign-in.</div>
-            <div class="step"><b>Assess controls</b>Editors maintain ownership, status, scores, risk, due dates, evidence references, and remediation notes.</div>
+            <div class="step"><b>Organize access</b>Admins create workspaces, add accounts, assign direct roles, and group members for viewer/editor access.</div>
+            <div class="step"><b>Assess controls</b>Editors maintain ownership, status, maturity, likelihood/impact, residual risk, due dates, references, and notes.</div>
             <div class="step"><b>Review and prioritize</b>Users filter by framework, domain, risk, and search text; dashboard calculations follow the visible selection.</div>
-            <div class="step"><b>Export and audit</b>Any role can export the filtered register as CSV; formula-like text is neutralized for spreadsheet use, and administrators can review recent changes.</div>
+            <div class="step"><b>Check public advisories</b>Users review sourced CISA KEV/advisory feeds; editors record analyst-verified local triage in the active workspace.</div>
+            <div class="step"><b>Export and audit</b>Any role can export the filtered workspace register; administrators review that workspace's recent changes.</div>
           </div>
         </section>
 
         <section class="section" id="scoring">
           <h2>06 · Scoring and interpretation</h2>
           <h3>Control maturity</h3>
-          <pre>Average maturity = sum(status_score for selected controls) / count(selected controls)</pre>
+          <pre>Average maturity = sum(status_score for selected controls) / count(selected controls)
+Inherent risk = likelihood (1–5) × impact (1–5)</pre>
           <p>The result is rounded to one decimal place. An empty selection reports 0.0. Each record's maturity score is an editor-entered value from 0 to 100; the application does not infer it from status text.</p>
+          <p>Inherent risk is an analyst estimate, with Low 1–4, Moderate 5–9, High 10–16, and Critical 17–25. It is not a probability. Residual risk remains a separate editor-entered rating.</p>
           <h3>Priority score</h3>
           <pre>Priority = (risk severity index x 25) + (100 - status_score)
 Severity index: Low=0, Moderate=1, High=2, Critical=3</pre>
-          <p>Higher values sort first. This transparent heuristic favors higher residual risk and lower maturity; it is not a quantitative likelihood-impact model. The overdue indicator counts controls whose due date is before today and whose status is not Implemented. Filters affect the dashboard metrics and risk lists.</p>
+          <p>Higher values sort first. This transparent heuristic favors higher residual risk and lower maturity; it is not a quantitative likelihood-impact model. Suggested actions are deterministic domain guidance for human review. The overdue indicator counts controls whose due date is before today and whose status is not Implemented. Filters affect dashboard metrics and risk lists.</p>
+        </section>
+
+        <section class="section" id="intelligence">
+          <h2>07 · Public threat intelligence</h2>
+          <p>The Threat intelligence page fetches the official <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA Known Exploited Vulnerabilities (KEV) catalog</a> and <a href="https://www.cisa.gov/cybersecurity-advisories/all.xml">CISA cybersecurity-advisory RSS feed</a> over HTTPS. It validates response sizes and expected data structure, displays source and retrieval time, and caches results in memory for up to one hour.</p>
+          <div class="callout"><b>Important interpretation:</b> CISA KEV identifies vulnerabilities known to be exploited somewhere; it does not show that this organization uses an affected product or version. Northstar has no asset inventory and does not perform automatic exposure matching. An authorized analyst must validate an affected asset/version and then record a separate organization-scoped triage status.</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Feed</th><th>What it provides</th><th>How Northstar uses it</th></tr></thead>
+              <tbody>
+                <tr><td>CISA KEV JSON</td><td>Public catalog entries, vendor/product names, dates, required actions, and source notes.</td><td>Shows sorted catalog data as research context; workspace triage is saved separately.</td></tr>
+                <tr><td>CISA advisories RSS</td><td>Public advisory titles, publication times, and official links.</td><td>Displays recent official advisories with direct source links.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Data is retrieved on demand, with a one-hour application cache. This is neither a push feed nor real-time detection; upstream availability and publication schedules are outside this application.</p>
         </section>
 
         <section class="section" id="example">
-          <h2>07 · Worked record example</h2>
+          <h2>08 · Worked record example</h2>
           <p>Illustrative record from the starter register:</p>
           <div class="table-wrap">
             <table>
@@ -312,7 +315,8 @@ Severity index: Low=0, Moderate=1, High=2, Critical=3</pre>
                 <tr><td>ID / control</td><td><code>PROTECT-02</code> · Secure configuration management</td><td>Unique register item shown in tables, audit events, and filters.</td></tr>
                 <tr><td>Domain / framework</td><td>Protect · NIS2</td><td>Groups the control in domain maturity and framework coverage.</td></tr>
                 <tr><td>Owner / status</td><td>Platform Engineering · Partially implemented</td><td>Communicates accountability and implementation progress.</td></tr>
-                <tr><td>Maturity / risk</td><td>64 / 100 · High</td><td>Priority = (2 x 25) + (100 - 64) = <b>86</b>.</td></tr>
+                <tr><td>Maturity / inherent assessment</td><td>64 / 100 · Likelihood 4 × impact 4 = 16 (High)</td><td>The 1–25 inherent score is an analyst-entered estimate, not an Internet-derived forecast.</td></tr>
+                <tr><td>Residual rating / priority</td><td>High · 86</td><td>Priority = (2 × 25) + (100 − 64) = <b>86</b>.</td></tr>
                 <tr><td>Due date / evidence</td><td>2026-10-15 · Baseline hardening checklist and exceptions register</td><td>Supports remediation review and locates evidence outside this app.</td></tr>
               </tbody>
             </table>
@@ -321,16 +325,19 @@ Severity index: Low=0, Moderate=1, High=2, Critical=3</pre>
         </section>
 
         <section class="section" id="operations">
-          <h2>08 · Installation, deployment, and maintenance</h2>
-          <p>Local development uses SQLite at <code>./data/grc_dashboard.db</code>. Docker Compose starts one Streamlit service and one PostgreSQL 16 service with a persistent named volume. The app container runs as an unprivileged user and drops Linux capabilities. Compose binds the dashboard to <code>127.0.0.1:8501</code> by default.</p>
+          <h2>09 · Installation, deployment, and maintenance</h2>
+          <p>Local development uses SQLite at <code>./data/grc_dashboard.db</code>. Docker Compose starts one Streamlit service and one PostgreSQL 16 service with a persistent named volume. The app container runs as an unprivileged user and drops Linux capabilities. Compose binds the dashboard to <code>127.0.0.1:8501</code> by default. One deployment can hold multiple organization workspaces with scoped access and data.</p>
           <h3>Operational checklist</h3>
           <ul>
             <li>Configure unique random values for <code>POSTGRES_PASSWORD</code> and <code>BOOTSTRAP_ADMIN_TOKEN</code> in an ignored local <code>.env</code>; do not commit secrets.</li>
             <li>For remote users, front the service with TLS and a restricted reverse proxy; preserve Streamlit's XSRF protections.</li>
             <li>Back up PostgreSQL regularly, test restores, and protect backup files to the same standard as the database.</li>
             <li>Review administrator assignments and account status periodically; deactivate accounts no longer required.</li>
+            <li>Review every workspace's direct members, effective group permissions, and active direct administrator.</li>
+            <li>Back up before an application migration; verify migrated workspace data and test restore procedures.</li>
             <li>Monitor logs, database health, disk capacity, dependency/security advisories, and failed deployment health checks.</li>
             <li>Keep evidence files in an approved document-management system and enter only a safe reference in Northstar.</li>
+            <li>Validate CISA catalog findings against local inventory; public listings are not proof of exposure.</li>
           </ul>
           <h3>Useful commands</h3>
           <pre>docker compose up --build -d
@@ -341,32 +348,37 @@ docker compose exec -T database pg_dump -U grc_dashboard grc_dashboard &gt; back
         </section>
 
         <section class="section" id="security">
-          <h2>09 · Security model, risks, and limitations</h2>
+          <h2>10 · Security model, risks, and limitations</h2>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Concern</th><th>Current mitigation</th><th>Remaining responsibility</th></tr></thead>
               <tbody>
-                <tr><td>Unauthorized account access</td><td>Named accounts, salted password hashes, role checks, bootstrap token, account deactivation.</td><td>Enforce TLS and network restrictions; no MFA or identity-provider integration.</td></tr>
-                <tr><td>Over-privileged users</td><td>Viewer/editor/administrator capability split and protected last administrator.</td><td>Assign roles to work needs and review them routinely.</td></tr>
-                <tr><td>Unauthorized or invalid writes</td><td>Parameterized SQLAlchemy operations, field validation, database constraints, audit events.</td><td>Application audit events are not a tamper-proof external audit service.</td></tr>
-                <tr><td>Loss or exposure of records</td><td>PostgreSQL persistent volume; Compose port is localhost-bound by default.</td><td>Configure encrypted backups, restore tests, storage controls, and production TLS/reverse proxy.</td></tr>
-                <tr><td>Evidence leakage</td><td>Only a text reference is stored; no file upload functionality.</td><td>Use approved access-controlled evidence storage; do not put secrets or sensitive evidence in notes.</td></tr>
-                <tr><td>Incorrect compliance conclusion</td><td>Report labels starter mappings and scores as decision support.</td><td>Validate framework applicability, evidence, and legal interpretations with qualified reviewers.</td></tr>
+                <tr><td>Unauthorized account access</td><td>Named accounts, salted hashes, session/version checks, bootstrap token.</td><td>Enforce TLS and network restrictions; no MFA or identity provider.</td></tr>
+                <tr><td>Cross-workspace disclosure</td><td>Membership and effective-role checks at service boundaries; scoped queries and composite control keys.</td><td>Review all future data services and protect database administrator access.</td></tr>
+                <tr><td>Over-privileged group</td><td>Groups may grant viewer/editor only; admin is direct; last direct administrator is protected.</td><td>Review role/group memberships routinely.</td></tr>
+                <tr><td>Unverified public vulnerability match</td><td>Official CISA provenance, retrieval timestamp, and separate analyst triage.</td><td>No local asset inventory/matching; validate products and versions manually.</td></tr>
+                <tr><td>Invalid writes / audit gaps</td><td>Parameterized operations, validation, constraints, transactional audit/history.</td><td>Audit remains editable by DB admins; no external immutable audit sink.</td></tr>
+                <tr><td>Loss or exposure of records</td><td>PostgreSQL persistent volume; Compose port is localhost-bound by default.</td><td>Configure encrypted backups, restore tests, storage controls, and production TLS.</td></tr>
+                <tr><td>Evidence leakage</td><td>Only a text reference is stored; no file upload functionality.</td><td>Use approved evidence storage; avoid secrets and sensitive data in notes.</td></tr>
+                <tr><td>Incorrect compliance conclusion</td><td>Risk model and sample mappings are explicitly decision support.</td><td>Validate applicability, evidence, and legal interpretations with qualified reviewers.</td></tr>
               </tbody>
             </table>
           </div>
-          <p><b>Known gaps:</b> no SSO/MFA, e-mail invitations or self-service recovery, rate limiting backed by shared storage, evidence-file upload, immutable audit export, multi-tenant isolation, or load/performance test. The app is intended for one organization and a single app instance. Review <a href="../SECURITY.md">SECURITY.md</a> and <a href="THREAT_MODEL.md">the threat model</a> before deployment.</p>
+          <p><b>Known gaps:</b> no SSO/MFA, e-mail invitations or self-service recovery, distributed login rate limiting, evidence-file upload, immutable external audit export, local asset inventory/exposure matching, high availability, or load/performance test. Organization isolation is enforced in application data services, but all workspaces share one deployment and database. Review <a href="../SECURITY.md">SECURITY.md</a> and <a href="THREAT_MODEL.md">the threat model</a> before deployment.</p>
         </section>
 
         <section class="section" id="verification">
-          <h2>10 · Verification and acceptance criteria</h2>
-          <p>The automated test suite covers score aggregation, framework mapping, one-shot risk iterables, database seeding and CRUD, input validation, password hashing/authentication, role behavior, administrator protection, and audit ordering. CI additionally runs Ruff, Black, and a dependency audit.</p>
+          <h2>11 · Verification and acceptance criteria</h2>
+          <p>The automated test suite covers score aggregation, tenant-isolated CRUD and triage, group role boundaries, fresh and legacy/partial migrations, feed validation, password lifecycle, administrator protection, audit/history, and CSV safety. CI additionally runs Ruff, Black, and a dependency audit.</p>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Acceptance area</th><th>Expected behavior</th></tr></thead>
               <tbody>
                 <tr><td>Persistence</td><td>Created and edited controls remain after app reruns/restarts using the configured shared database.</td></tr>
                 <tr><td>Least privilege</td><td>Viewer cannot edit; editor cannot delete or manage accounts; administrator can manage users and delete records.</td></tr>
+                <tr><td>Organization isolation</td><td>A workspace member can read or modify only records in active memberships; duplicate control IDs remain isolated.</td></tr>
+                <tr><td>Group access</td><td>Groups grant viewer/editor only; administrators must be direct workspace members.</td></tr>
+                <tr><td>Threat intelligence</td><td>CISA content is source-attributed; triage is workspace-specific and does not claim asset exposure.</td></tr>
                 <tr><td>Input and export safety</td><td>Invalid risk/status values, dates, scores, and required fields are rejected; formula-like text is neutralized in CSV exports.</td></tr>
                 <tr><td>Auditability</td><td>Control and account changes create an event with actor, action, entity, and timestamp.</td></tr>
                 <tr><td>First run</td><td>No default admin is created; setup remains locked without an operator-provided bootstrap token.</td></tr>

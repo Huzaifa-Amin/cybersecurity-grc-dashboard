@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
-  <title id="title">Illustrative Northstar Cyber GRC dashboard</title>
-  <desc id="desc">A dark navy and teal GRC dashboard preview with portfolio metrics, domain maturity, framework coverage, and a prioritized control register.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 960" role="img" aria-labelledby="title desc">
+  <title id="title">Northstar workspace dashboard preview</title>
+  <desc id="desc">Illustrative Northstar dashboard with a dark navy navigation sidebar, organization switcher, signed-in account menu, five portfolio indicators, risk posture, maturity and framework charts, and prioritized remediation actions.</desc>
   <defs>
     <linearGradient id="header" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#142b49"/>
@@ -10,109 +10,137 @@
       <feDropShadow dx="0" dy="5" stdDeviation="10" flood-color="#142b49" flood-opacity=".07"/>
     </filter>
   </defs>
-  <rect width="1440" height="900" rx="26" fill="#f3f7fb"/>
-  <rect x="0" y="0" width="245" height="900" rx="26" fill="#142b49"/>
-  <rect x="219" y="0" width="26" height="900" fill="#142b49"/>
-  <circle cx="46" cy="49" r="17" fill="#72d6cf"/>
-  <path d="M46 37l11 5v8c0 8-6 13-11 16-6-3-11-8-11-16v-8z" fill="#142b49"/>
-  <text x="76" y="48" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">NORTHSTAR</text>
-  <text x="76" y="68" fill="#aec3d6" font-family="Arial,sans-serif" font-size="11" letter-spacing="1.6">CYBER GRC</text>
-  <text x="28" y="124" fill="#84a1bc" font-family="Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.4">WORKSPACE</text>
-  <rect x="15" y="142" width="215" height="43" rx="10" fill="#214664"/>
-  <rect x="15" y="142" width="4" height="43" rx="2" fill="#72d6cf"/>
-  <text x="35" y="169" fill="#fff" font-family="Arial,sans-serif" font-size="14" font-weight="700">Executive overview</text>
-  <text x="35" y="220" fill="#c2d1de" font-family="Arial,sans-serif" font-size="14">Control register</text>
-  <text x="35" y="260" fill="#c2d1de" font-family="Arial,sans-serif" font-size="14">Evidence &amp; actions</text>
-  <line x1="26" y1="292" x2="219" y2="292" stroke="#31516e"/>
-  <text x="28" y="326" fill="#84a1bc" font-family="Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.4">FILTERS</text>
-  <text x="30" y="364" fill="#c2d1de" font-family="Arial,sans-serif" font-size="12">Search controls</text>
-  <rect x="25" y="376" width="195" height="34" rx="7" fill="#203c59"/>
-  <text x="37" y="398" fill="#91a8bd" font-family="Arial,sans-serif" font-size="12">ID, control, owner</text>
-  <text x="30" y="445" fill="#c2d1de" font-family="Arial,sans-serif" font-size="12">Framework</text>
-  <rect x="25" y="457" width="195" height="34" rx="7" fill="#203c59"/>
-  <text x="37" y="479" fill="#e5edf4" font-family="Arial,sans-serif" font-size="12">All frameworks</text>
-  <text x="30" y="526" fill="#c2d1de" font-family="Arial,sans-serif" font-size="12">Domain</text>
-  <rect x="25" y="538" width="195" height="34" rx="7" fill="#203c59"/>
-  <text x="37" y="560" fill="#e5edf4" font-family="Arial,sans-serif" font-size="12">All domains</text>
-  <text x="30" y="618" fill="#84a1bc" font-family="Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.4">SIGNED IN</text>
-  <text x="30" y="648" fill="#fff" font-family="Arial,sans-serif" font-size="13" font-weight="700">GRC Administrator</text>
-  <rect x="270" y="28" width="1140" height="106" rx="18" fill="url(#header)"/>
-  <text x="302" y="72" fill="#fff" font-family="Arial,sans-serif" font-size="27" font-weight="700">Cybersecurity GRC workspace</text>
-  <text x="302" y="101" fill="#d9eff0" font-family="Arial,sans-serif" font-size="14">Control assurance · Risk visibility · Evidence accountability</text>
-  <rect x="1262" y="61" width="113" height="34" rx="17" fill="#ffffff" fill-opacity=".15" stroke="#ffffff" stroke-opacity=".35"/>
-  <circle cx="1281" cy="78" r="5" fill="#9ce1ce"/>
-  <text x="1293" y="83" fill="#fff" font-family="Arial,sans-serif" font-size="12" font-weight="700">SAMPLE DATA</text>
-  <text x="275" y="174" fill="#52647a" font-family="Arial,sans-serif" font-size="13">Starter dataset · 10 example controls · use filters to focus your review</text>
+  <rect width="1440" height="960" rx="24" fill="#f3f7fb"/>
+  <rect x="0" y="0" width="248" height="960" rx="24" fill="#142b49"/>
+  <rect x="222" y="0" width="26" height="960" fill="#142b49"/>
+  <circle cx="44" cy="48" r="17" fill="#72d6cf"/>
+  <path d="M44 36l11 5v8c0 8-6 13-11 16-6-3-11-8-11-16v-8z" fill="#142b49"/>
+  <text x="74" y="47" fill="#fff" font-family="Arial,sans-serif" font-size="19" font-weight="700">NORTHSTAR</text>
+  <text x="74" y="68" fill="#aec3d6" font-family="Arial,sans-serif" font-size="11" letter-spacing="1.6">CYBER GRC</text>
+  <text x="26" y="119" fill="#84a1bc" font-family="Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.4">WORKSPACE</text>
+  <rect x="14" y="136" width="220" height="42" rx="10" fill="#214664"/>
+  <rect x="14" y="136" width="4" height="42" rx="2" fill="#72d6cf"/>
+  <text x="34" y="162" fill="#fff" font-family="Arial,sans-serif" font-size="14" font-weight="700">▦   Overview</text>
+  <text x="34" y="213" fill="#c2d1de" font-family="Arial,sans-serif" font-size="14">☷   Controls &amp; risk</text>
+  <text x="34" y="254" fill="#c2d1de" font-family="Arial,sans-serif" font-size="14">✓   Evidence &amp; actions</text>
+  <text x="34" y="295" fill="#c2d1de" font-family="Arial,sans-serif" font-size="14">◈   Threat intelligence</text>
+  <line x1="24" y1="326" x2="222" y2="326" stroke="#31516e"/>
+  <text x="26" y="359" fill="#84a1bc" font-family="Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.4">REGISTER FILTERS</text>
+  <text x="28" y="394" fill="#c2d1de" font-family="Arial,sans-serif" font-size="12">Search controls</text>
+  <rect x="24" y="405" width="198" height="34" rx="7" fill="#203c59"/>
+  <text x="36" y="427" fill="#91a8bd" font-family="Arial,sans-serif" font-size="12">ID, control, or owner</text>
+  <text x="28" y="471" fill="#c2d1de" font-family="Arial,sans-serif" font-size="12">Framework</text>
+  <rect x="24" y="482" width="198" height="34" rx="7" fill="#203c59"/>
+  <text x="36" y="504" fill="#e5edf4" font-family="Arial,sans-serif" font-size="12">All frameworks</text>
+  <text x="28" y="549" fill="#c2d1de" font-family="Arial,sans-serif" font-size="12">Domain</text>
+  <rect x="24" y="560" width="198" height="34" rx="7" fill="#203c59"/>
+  <text x="36" y="582" fill="#e5edf4" font-family="Arial,sans-serif" font-size="12">All domains</text>
+  <text x="28" y="627" fill="#c2d1de" font-family="Arial,sans-serif" font-size="12">Residual risk</text>
+  <rect x="24" y="638" width="198" height="34" rx="7" fill="#203c59"/>
+  <text x="36" y="660" fill="#e5edf4" font-family="Arial,sans-serif" font-size="12">All ratings</text>
+  <line x1="24" y1="700" x2="222" y2="700" stroke="#31516e"/>
+  <text x="28" y="733" fill="#84a1bc" font-family="Arial,sans-serif" font-size="11" font-weight="700" letter-spacing="1.4">ACTIVE WORKSPACE</text>
+  <text x="28" y="761" fill="#fff" font-family="Arial,sans-serif" font-size="13" font-weight="700">Northstar Research</text>
+  <rect x="28" y="778" width="88" height="25" rx="12" fill="#e6f5f5"/>
+  <text x="72" y="795" text-anchor="middle" fill="#075c66" font-family="Arial,sans-serif" font-size="11" font-weight="700">ADMIN</text>
+  <text x="28" y="872" fill="#84a1bc" font-family="Arial,sans-serif" font-size="11">Local illustrative data</text>
+  <rect x="270" y="26" width="1140" height="116" rx="18" fill="url(#header)"/>
+  <text x="300" y="63" fill="#d9eff0" font-family="Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="1.2">SECURITY PROGRAM WORKSPACE</text>
+  <text x="300" y="101" fill="#fff" font-family="Arial,sans-serif" font-size="27" font-weight="700">Cybersecurity GRC</text>
+  <rect x="1022" y="49" width="202" height="54" rx="11" fill="#fff" fill-opacity=".13" stroke="#fff" stroke-opacity=".25"/>
+  <text x="1038" y="69" fill="#d9eff0" font-family="Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1">ORGANIZATION</text>
+  <text x="1038" y="91" fill="#fff" font-family="Arial,sans-serif" font-size="13" font-weight="700">Northstar Research  ▾</text>
+  <rect x="1237" y="49" width="150" height="54" rx="11" fill="#fff" fill-opacity=".13" stroke="#fff" stroke-opacity=".25"/>
+  <circle cx="1258" cy="76" r="13" fill="#72d6cf"/>
+  <text x="1258" y="80" text-anchor="middle" fill="#142b49" font-family="Arial,sans-serif" font-size="10" font-weight="700">AD</text>
+  <text x="1279" y="70" fill="#fff" font-family="Arial,sans-serif" font-size="11" font-weight="700">A. Director</text>
+  <text x="1279" y="88" fill="#d9eff0" font-family="Arial,sans-serif" font-size="10">Administrator  ▾</text>
+  <text x="273" y="171" fill="#52647a" font-family="Arial,sans-serif" font-size="13">Portfolio snapshot · refreshed 07 Oct 2026, 10:00 UTC · illustrative starter controls</text>
   <g filter="url(#shadow)">
-    <rect x="270" y="197" width="270" height="117" rx="14" fill="#fff" stroke="#dbe4ef"/>
-    <rect x="555" y="197" width="270" height="117" rx="14" fill="#fff" stroke="#dbe4ef"/>
-    <rect x="840" y="197" width="270" height="117" rx="14" fill="#fff" stroke="#dbe4ef"/>
-    <rect x="1125" y="197" width="285" height="117" rx="14" fill="#fff" stroke="#dbe4ef"/>
+    <rect x="270" y="192" width="218" height="110" rx="14" fill="#fff" stroke="#dbe4ef"/>
+    <rect x="500" y="192" width="218" height="110" rx="14" fill="#fff" stroke="#dbe4ef"/>
+    <rect x="730" y="192" width="218" height="110" rx="14" fill="#fff" stroke="#dbe4ef"/>
+    <rect x="960" y="192" width="218" height="110" rx="14" fill="#fff" stroke="#dbe4ef"/>
+    <rect x="1190" y="192" width="220" height="110" rx="14" fill="#fff" stroke="#dbe4ef"/>
+    <rect x="270" y="323" width="730" height="270" rx="14" fill="#fff" stroke="#dbe4ef"/>
+    <rect x="1017" y="323" width="393" height="270" rx="14" fill="#fff" stroke="#dbe4ef"/>
+    <rect x="270" y="615" width="1140" height="292" rx="14" fill="#fff" stroke="#dbe4ef"/>
   </g>
-  <text x="292" y="229" fill="#52647a" font-family="Arial,sans-serif" font-size="12" font-weight="700">CONTROL MATURITY</text>
-  <text x="292" y="278" fill="#087e8b" font-family="Arial,sans-serif" font-size="36" font-weight="700">78.3%</text>
-  <text x="292" y="299" fill="#77879a" font-family="Arial,sans-serif" font-size="11">Average score in current view</text>
-  <text x="577" y="229" fill="#52647a" font-family="Arial,sans-serif" font-size="12" font-weight="700">CONTROLS IN VIEW</text>
-  <text x="577" y="278" fill="#172b4d" font-family="Arial,sans-serif" font-size="36" font-weight="700">10</text>
-  <text x="577" y="299" fill="#77879a" font-family="Arial,sans-serif" font-size="11">Across the selected scope</text>
-  <text x="862" y="229" fill="#52647a" font-family="Arial,sans-serif" font-size="12" font-weight="700">HIGH / CRITICAL RISKS</text>
-  <text x="862" y="278" fill="#b42332" font-family="Arial,sans-serif" font-size="36" font-weight="700">1</text>
-  <text x="862" y="299" fill="#77879a" font-family="Arial,sans-serif" font-size="11">Priority for treatment</text>
-  <text x="1147" y="229" fill="#52647a" font-family="Arial,sans-serif" font-size="12" font-weight="700">OVERDUE ACTIONS</text>
-  <text x="1147" y="278" fill="#a85c00" font-family="Arial,sans-serif" font-size="36" font-weight="700">0</text>
-  <text x="1147" y="299" fill="#77879a" font-family="Arial,sans-serif" font-size="11">Past due, not implemented</text>
-  <g filter="url(#shadow)">
-    <rect x="270" y="337" width="676" height="235" rx="14" fill="#fff" stroke="#dbe4ef"/>
-    <rect x="961" y="337" width="449" height="235" rx="14" fill="#fff" stroke="#dbe4ef"/>
-    <rect x="270" y="595" width="1140" height="255" rx="14" fill="#fff" stroke="#dbe4ef"/>
-  </g>
-  <text x="296" y="375" fill="#172b4d" font-family="Arial,sans-serif" font-size="17" font-weight="700">Maturity by domain</text>
-  <text x="296" y="398" fill="#77879a" font-family="Arial,sans-serif" font-size="11">Average implementation score · 0–100</text>
-  <line x1="320" y1="522" x2="910" y2="522" stroke="#e5ebf1"/>
-  <line x1="320" y1="477" x2="910" y2="477" stroke="#e5ebf1"/>
-  <line x1="320" y1="432" x2="910" y2="432" stroke="#e5ebf1"/>
-  <rect x="357" y="439" width="61" height="83" rx="7" fill="#087e8b"/>
-  <rect x="456" y="454" width="61" height="68" rx="7" fill="#258f98"/>
-  <rect x="555" y="447" width="61" height="75" rx="7" fill="#5aaeb0"/>
-  <rect x="654" y="439" width="61" height="83" rx="7" fill="#63b5b6"/>
-  <rect x="753" y="442" width="61" height="80" rx="7" fill="#258f98"/>
-  <text x="350" y="543" fill="#52647a" font-family="Arial,sans-serif" font-size="10">Governance</text>
-  <text x="461" y="543" fill="#52647a" font-family="Arial,sans-serif" font-size="10">Identify</text>
-  <text x="568" y="543" fill="#52647a" font-family="Arial,sans-serif" font-size="10">Protect</text>
-  <text x="657" y="543" fill="#52647a" font-family="Arial,sans-serif" font-size="10">Detect</text>
-  <text x="749" y="543" fill="#52647a" font-family="Arial,sans-serif" font-size="10">Respond</text>
-  <text x="987" y="375" fill="#172b4d" font-family="Arial,sans-serif" font-size="17" font-weight="700">Framework coverage</text>
-  <text x="987" y="398" fill="#77879a" font-family="Arial,sans-serif" font-size="11">Mapped controls in the current view</text>
-  <text x="988" y="437" fill="#263b56" font-family="Arial,sans-serif" font-size="12">NIST CSF 2.0</text>
-  <rect x="1090" y="425" width="232" height="13" rx="6" fill="#e8eef3"/>
-  <rect x="1090" y="425" width="174" height="13" rx="6" fill="#087e8b"/>
-  <text x="1342" y="437" fill="#52647a" font-family="Arial,sans-serif" font-size="11">3</text>
-  <text x="988" y="470" fill="#263b56" font-family="Arial,sans-serif" font-size="12">ISO 27001 Annex A</text>
-  <rect x="1090" y="458" width="232" height="13" rx="6" fill="#e8eef3"/>
-  <rect x="1090" y="458" width="174" height="13" rx="6" fill="#258f98"/>
-  <text x="1342" y="470" fill="#52647a" font-family="Arial,sans-serif" font-size="11">3</text>
-  <text x="988" y="503" fill="#263b56" font-family="Arial,sans-serif" font-size="12">NIS2</text>
-  <rect x="1090" y="491" width="232" height="13" rx="6" fill="#e8eef3"/>
-  <rect x="1090" y="491" width="174" height="13" rx="6" fill="#5aaeb0"/>
-  <text x="1342" y="503" fill="#52647a" font-family="Arial,sans-serif" font-size="11">3</text>
-  <text x="988" y="536" fill="#263b56" font-family="Arial,sans-serif" font-size="12">GDPR</text>
-  <rect x="1090" y="524" width="232" height="13" rx="6" fill="#e8eef3"/>
-  <rect x="1090" y="524" width="77" height="13" rx="6" fill="#8ac7c5"/>
-  <text x="1342" y="536" fill="#52647a" font-family="Arial,sans-serif" font-size="11">1</text>
-  <text x="296" y="635" fill="#172b4d" font-family="Arial,sans-serif" font-size="17" font-weight="700">Highest-priority controls</text>
-  <text x="296" y="657" fill="#77879a" font-family="Arial,sans-serif" font-size="11">Priority combines risk severity and remaining maturity gap</text>
-  <rect x="295" y="678" width="1090" height="32" rx="5" fill="#edf4f8"/>
-  <text x="310" y="699" fill="#52647a" font-family="Arial,sans-serif" font-size="10" font-weight="700">CONTROL</text>
-  <text x="650" y="699" fill="#52647a" font-family="Arial,sans-serif" font-size="10" font-weight="700">RISK</text>
-  <text x="800" y="699" fill="#52647a" font-family="Arial,sans-serif" font-size="10" font-weight="700">MATURITY</text>
-  <text x="1035" y="699" fill="#52647a" font-family="Arial,sans-serif" font-size="10" font-weight="700">OWNER</text>
-  <text x="1260" y="699" fill="#52647a" font-family="Arial,sans-serif" font-size="10" font-weight="700">PRIORITY</text>
-  <text x="310" y="739" fill="#172b4d" font-family="Arial,sans-serif" font-size="12" font-weight="700">PROTECT-02 · Secure configuration management</text>
-  <rect x="650" y="723" width="70" height="23" rx="11" fill="#fff0df"/>
-  <text x="664" y="739" fill="#a85c00" font-family="Arial,sans-serif" font-size="10" font-weight="700">HIGH</text>
-  <text x="811" y="739" fill="#52647a" font-family="Arial,sans-serif" font-size="12">64 / 100</text>
-  <text x="1035" y="739" fill="#52647a" font-family="Arial,sans-serif" font-size="12">Platform Engineering</text>
-  <text x="1280" y="739" fill="#b42332" font-family="Arial,sans-serif" font-size="13" font-weight="700">86</text>
-  <line x1="295" y1="760" x2="1385" y2="760" stroke="#e5ebf1"/>
-  <text x="310" y="793" fill="#52647a" font-family="Arial,sans-serif" font-size="12">Illustrative dashboard preview · starter data · values depend on your filters</text>
+  <text x="290" y="223" fill="#52647a" font-family="Arial,sans-serif" font-size="11" font-weight="700">MATURITY SCORE</text>
+  <text x="290" y="268" fill="#087e8b" font-family="Arial,sans-serif" font-size="33" font-weight="700">78.3%</text>
+  <text x="290" y="288" fill="#77879a" font-family="Arial,sans-serif" font-size="10">Average recorded maturity</text>
+  <text x="520" y="223" fill="#52647a" font-family="Arial,sans-serif" font-size="11" font-weight="700">CONTROLS IN SCOPE</text>
+  <text x="520" y="268" fill="#172b4d" font-family="Arial,sans-serif" font-size="33" font-weight="700">10</text>
+  <text x="520" y="288" fill="#77879a" font-family="Arial,sans-serif" font-size="10">Selected register records</text>
+  <text x="750" y="223" fill="#52647a" font-family="Arial,sans-serif" font-size="11" font-weight="700">OPEN ACTIONS</text>
+  <text x="750" y="268" fill="#172b4d" font-family="Arial,sans-serif" font-size="33" font-weight="700">4</text>
+  <text x="750" y="288" fill="#77879a" font-family="Arial,sans-serif" font-size="10">Not yet implemented</text>
+  <text x="980" y="223" fill="#52647a" font-family="Arial,sans-serif" font-size="11" font-weight="700">HIGH INHERENT RISK</text>
+  <text x="980" y="268" fill="#b42332" font-family="Arial,sans-serif" font-size="33" font-weight="700">3</text>
+  <text x="980" y="288" fill="#77879a" font-family="Arial,sans-serif" font-size="10">Analyst likelihood × impact</text>
+  <text x="1210" y="223" fill="#52647a" font-family="Arial,sans-serif" font-size="11" font-weight="700">OVERDUE</text>
+  <text x="1210" y="268" fill="#247a56" font-family="Arial,sans-serif" font-size="33" font-weight="700">0</text>
+  <text x="1210" y="288" fill="#77879a" font-family="Arial,sans-serif" font-size="10">Past due, not implemented</text>
+  <text x="295" y="360" fill="#172b4d" font-family="Arial,sans-serif" font-size="17" font-weight="700">Maturity by domain</text>
+  <text x="295" y="382" fill="#77879a" font-family="Arial,sans-serif" font-size="11">Average implementation score · 0–100</text>
+  <line x1="335" y1="535" x2="964" y2="535" stroke="#e5ebf1"/>
+  <line x1="335" y1="485" x2="964" y2="485" stroke="#e5ebf1"/>
+  <line x1="335" y1="435" x2="964" y2="435" stroke="#e5ebf1"/>
+  <rect x="362" y="427" width="48" height="108" rx="6" fill="#087e8b"/>
+  <rect x="442" y="446" width="48" height="89" rx="6" fill="#258f98"/>
+  <rect x="522" y="437" width="48" height="98" rx="6" fill="#258f98"/>
+  <rect x="602" y="427" width="48" height="108" rx="6" fill="#5aaeb0"/>
+  <rect x="682" y="442" width="48" height="93" rx="6" fill="#63b5b6"/>
+  <rect x="762" y="430" width="48" height="105" rx="6" fill="#258f98"/>
+  <rect x="842" y="432" width="48" height="103" rx="6" fill="#087e8b"/>
+  <text x="355" y="553" fill="#52647a" font-family="Arial,sans-serif" font-size="9">Governance</text>
+  <text x="444" y="553" fill="#52647a" font-family="Arial,sans-serif" font-size="9">Identify</text>
+  <text x="527" y="553" fill="#52647a" font-family="Arial,sans-serif" font-size="9">Protect</text>
+  <text x="606" y="553" fill="#52647a" font-family="Arial,sans-serif" font-size="9">Detect</text>
+  <text x="682" y="553" fill="#52647a" font-family="Arial,sans-serif" font-size="9">Respond</text>
+  <text x="759" y="553" fill="#52647a" font-family="Arial,sans-serif" font-size="9">Recover</text>
+  <text x="839" y="553" fill="#52647a" font-family="Arial,sans-serif" font-size="9">Privacy</text>
+  <text x="1042" y="360" fill="#172b4d" font-family="Arial,sans-serif" font-size="17" font-weight="700">Residual risk posture</text>
+  <text x="1042" y="382" fill="#77879a" font-family="Arial,sans-serif" font-size="11">Editor-assessed current risk rating</text>
+  <text x="1043" y="426" fill="#263b56" font-family="Arial,sans-serif" font-size="12">Low</text>
+  <rect x="1110" y="414" width="198" height="13" rx="6" fill="#e8eef3"/>
+  <rect x="1110" y="414" width="130" height="13" rx="6" fill="#247a56"/>
+  <text x="1322" y="426" fill="#52647a" font-family="Arial,sans-serif" font-size="11">5</text>
+  <text x="1043" y="463" fill="#263b56" font-family="Arial,sans-serif" font-size="12">Moderate</text>
+  <rect x="1110" y="451" width="198" height="13" rx="6" fill="#e8eef3"/>
+  <rect x="1110" y="451" width="104" height="13" rx="6" fill="#d49348"/>
+  <text x="1322" y="463" fill="#52647a" font-family="Arial,sans-serif" font-size="11">4</text>
+  <text x="1043" y="500" fill="#263b56" font-family="Arial,sans-serif" font-size="12">High</text>
+  <rect x="1110" y="488" width="198" height="13" rx="6" fill="#e8eef3"/>
+  <rect x="1110" y="488" width="26" height="13" rx="6" fill="#b65a4d"/>
+  <text x="1322" y="500" fill="#52647a" font-family="Arial,sans-serif" font-size="11">1</text>
+  <text x="1043" y="537" fill="#263b56" font-family="Arial,sans-serif" font-size="12">Critical</text>
+  <rect x="1110" y="525" width="198" height="13" rx="6" fill="#e8eef3"/>
+  <text x="1322" y="537" fill="#52647a" font-family="Arial,sans-serif" font-size="11">0</text>
+  <text x="295" y="653" fill="#172b4d" font-family="Arial,sans-serif" font-size="17" font-weight="700">Highest-priority controls</text>
+  <text x="295" y="676" fill="#77879a" font-family="Arial,sans-serif" font-size="11">Risk rating, maturity gap, owner, suggested next step, and update timestamp</text>
+  <rect x="292" y="697" width="1096" height="34" rx="7" fill="#edf4f8"/>
+  <text x="307" y="719" fill="#52647a" font-family="Arial,sans-serif" font-size="10" font-weight="700">CONTROL</text>
+  <text x="565" y="719" fill="#52647a" font-family="Arial,sans-serif" font-size="10" font-weight="700">RISK / SCORE</text>
+  <text x="710" y="719" fill="#52647a" font-family="Arial,sans-serif" font-size="10" font-weight="700">OWNER</text>
+  <text x="875" y="719" fill="#52647a" font-family="Arial,sans-serif" font-size="10" font-weight="700">NEXT STEP</text>
+  <text x="1267" y="719" fill="#52647a" font-family="Arial,sans-serif" font-size="10" font-weight="700">UPDATED</text>
+  <line x1="292" y1="777" x2="1388" y2="777" stroke="#e5ebf1"/>
+  <line x1="292" y1="823" x2="1388" y2="823" stroke="#e5ebf1"/>
+  <text x="307" y="757" fill="#172b4d" font-family="Arial,sans-serif" font-size="11" font-weight="700">PROTECT-02 · Secure configuration</text>
+  <text x="565" y="757" fill="#b42332" font-family="Arial,sans-serif" font-size="11">High · 16/25 · 64%</text>
+  <text x="710" y="757" fill="#52647a" font-family="Arial,sans-serif" font-size="11">Platform Engineering</text>
+  <text x="875" y="757" fill="#52647a" font-family="Arial,sans-serif" font-size="11">Prioritize owner review and verify baseline evidence</text>
+  <text x="1267" y="757" fill="#52647a" font-family="Arial,sans-serif" font-size="10">07 Oct 2026</text>
+  <text x="307" y="803" fill="#172b4d" font-family="Arial,sans-serif" font-size="11" font-weight="700">IDENT-01 · Asset inventory</text>
+  <text x="565" y="803" fill="#a85c00" font-family="Arial,sans-serif" font-size="11">Moderate · 9/25 · 68%</text>
+  <text x="710" y="803" fill="#52647a" font-family="Arial,sans-serif" font-size="11">IT Operations</text>
+  <text x="875" y="803" fill="#52647a" font-family="Arial,sans-serif" font-size="11">Validate ownership and critical dependencies</text>
+  <text x="1267" y="803" fill="#52647a" font-family="Arial,sans-serif" font-size="10">07 Oct 2026</text>
+  <text x="307" y="849" fill="#172b4d" font-family="Arial,sans-serif" font-size="11" font-weight="700">RECOVER-01 · Backup testing</text>
+  <text x="565" y="849" fill="#a85c00" font-family="Arial,sans-serif" font-size="11">Moderate · 12/25 · 70%</text>
+  <text x="710" y="849" fill="#52647a" font-family="Arial,sans-serif" font-size="11">Infrastructure Team</text>
+  <text x="875" y="849" fill="#52647a" font-family="Arial,sans-serif" font-size="11">Run a restore test and record recovery results</text>
+  <text x="1267" y="849" fill="#52647a" font-family="Arial,sans-serif" font-size="10">07 Oct 2026</text>
+  <text x="270" y="936" fill="#52647a" font-family="Arial,sans-serif" font-size="11">Illustrative starter data · actual dashboard values change with the workspace, records, date, and filters</text>
 </svg>

@@ -5,7 +5,7 @@
 <h1 align="center">Northstar Cybersecurity GRC Workspace</h1>
 
 <p align="center">
-  A practical, single-organization workspace for security controls, risk prioritization, evidence references, and accountable follow-up.
+  A role-aware, multi-organization workspace for security controls, risk prioritization, threat triage, and accountable follow-up.
 </p>
 
 <p align="center">
@@ -16,17 +16,19 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-087E8B.svg" alt="MIT license"></a>
 </p>
 
-> **Deployment and data boundary:** Northstar is an operational starter, not a certified compliance service or evidence repository. It stores evidence references, not uploaded files. Use approved storage for evidence and deploy this application behind HTTPS on a restricted network.
+> **Deployment and data boundary:** Northstar is an operational GRC workspace, not a certified compliance service, asset inventory, or evidence repository. It stores evidence references, not uploaded files. Use approved storage for evidence and deploy behind HTTPS on a restricted network.
 
 ## At a glance
 
-- **Shared register:** maintain controls, framework mappings, owners, maturity, risk, due dates, evidence references, and notes.
-- **Useful oversight:** filter the register, review maturity and framework summaries, prioritize gaps, and export a spreadsheet-safe CSV.
-- **Accountability:** provision named accounts, enforce viewer/editor/administrator roles, and review application audit events.
+- **Organization workspaces:** host multiple organizations in one deployment, each with scoped controls, users, groups, audit events, history, and threat triage.
+- **Risk oversight:** track analyst-entered likelihood and impact, residual ratings, maturity, due dates, timestamped updates, and suggested next steps.
+- **Team access:** assign direct workspace roles or grant viewer/editor permissions to groups. Groups cannot grant administrator.
+- **Threat context:** view CISA's public Known Exploited Vulnerabilities catalog and cybersecurity advisories, with source and retrieval timestamps.
+- **Useful reporting:** filter the register, review maturity/risk/action charts, and export a spreadsheet-safe CSV.
 - **Persistent storage:** use PostgreSQL for a shared deployment or SQLite for local development and tests.
-- **Report-ready:** consult the project report for the architecture, data tables, workflows, examples, security design, and known limitations.
+- **Report-ready:** consult the styled project report for architecture, data tables, workflows, examples, security design, and limitations.
 
-The intended usage profile is **one organization with fewer than 1,000 registered users**. This is a design target, not a measured capacity, load-test result, or availability guarantee. The included Compose setup runs a single Streamlit instance and a single PostgreSQL database.
+The intended usage profile is **fewer than 1,000 registered users across a small-team deployment**. This is a design target, not a measured capacity, load-test result, or availability guarantee. The included Compose setup runs one Streamlit instance and one PostgreSQL database.
 
 ## Workspace preview
 
@@ -44,24 +46,27 @@ The illustration uses the bundled starter dataset; dashboard values change with 
 
 ### Core records
 
-| Table | What it stores | Practical use |
+| Table | Scope | Practical use |
 |---|---|---|
-| `controls` | Control identifiers, descriptions, mappings, owner, maturity, risk, dates, evidence references, and notes | The working control and remediation register |
-| `users` | Named accounts, password hashes, roles, and account lifecycle state | Authentication and access management |
-| `audit_log` | Actor, action, entity, and timestamp for application changes | Administrator review of recent activity |
-| `app_settings` | Small application-level settings, including bootstrap state | Safe, one-time first-administrator setup |
+| `organizations` | Workspace registry | Separates each organization's GRC workspace |
+| `organization_memberships` | Organization + user | Direct role and membership state |
+| `groups`, `group_memberships` | Organization-scoped | Reusable viewer/editor access |
+| `controls` | Organization + control ID | Maturity, likelihood/impact, residual risk, owner, due date, evidence reference |
+| `control_history`, `audit_log` | Organization-scoped | Timestamped control changes and administrative actions |
+| `threat_triage` | Organization + CVE | Analyst-recorded local follow-up, separate from public feed data |
+| `users`, `app_settings`, `alembic_version` | Database | Global accounts, initialization markers, schema revision |
 
 Schema changes are versioned with Alembic migrations. Control changes and account lifecycle operations write an audit event in the same database transaction. The audit log is application-level and is **not** tamper-proof or an external immutable audit service.
 
 ### Access model
 
-| Role | Read and export | Create / edit controls | Delete controls | Manage users and audit |
+| Effective workspace role | Read / export | Edit controls / triage | Delete controls | Manage members, groups, audit |
 |---|:---:|:---:|:---:|:---:|
 | Viewer | Yes | No | No | No |
 | Editor | Yes | Yes | No | No |
 | Administrator | Yes | Yes | Yes | Yes |
 
-Permission checks are enforced by the application, not only by hiding interface controls. Assign each person the minimum role needed. An administrator can provision accounts and set a temporary password; new and reset accounts must change it before using the dashboard.
+Permission checks are enforced by organization-scoped services, not only by hiding interface controls. A user may have different roles in different workspaces. Direct membership and group roles combine by highest privilege; a group can grant viewer/editor, never administrator. Each workspace must retain a directly assigned active administrator. New and reset accounts must change their temporary password before using the dashboard.
 
 ## Quick start: local use
 
@@ -117,15 +122,17 @@ Open [http://127.0.0.1:8501](http://127.0.0.1:8501) and complete first-administr
 
 > **Important:** the CI workflow verifies that the Docker image builds. A live PostgreSQL/Compose deployment, backup-and-restore procedure, and capacity under real user load have not been validated in this environment. Complete those checks in the target hosting environment before production use.
 
-## Risk prioritization
+## Risk and threat intelligence
 
-The dashboard provides decision support; it does not determine legal compliance or certification. The priority score combines risk severity with the remaining maturity gap:
+Likelihood and impact are entered by an analyst from 1–5; inherent risk is their product (1–25). Bands are Low (1–4), Moderate (5–9), High (10–16), and Critical (17–25). Residual risk is a separate analyst-entered label. The priority score combines residual severity with the remaining maturity gap:
 
 ```text
 priority = risk_index * 25 + (100 - status_score)
 ```
 
-The risk index is 0 for Low, 1 for Moderate, 2 for High, and 3 for Critical. A higher score sorts earlier for attention. Review source assessments, applicability, and treatment decisions with the responsible control owners.
+The residual-risk index is 0 for Low, 1 for Moderate, 2 for High, and 3 for Critical. A higher score sorts earlier for attention. This is a transparent heuristic, not a probability, validated forecast, or compliance determination.
+
+The Threat intelligence page reads the public [CISA KEV catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) and [CISA advisories feed](https://www.cisa.gov/cybersecurity-advisories/all.xml), fetched on demand and cached in memory for up to one hour. Sources and retrieval timestamps are displayed. A catalog entry does **not** mean the organization's systems are affected; Northstar has no asset inventory or automatic exposure matching. Analysts must validate products and versions against their own environment before entering organization-specific triage.
 
 ## Security and operating limits
 
@@ -134,7 +141,8 @@ The risk index is 0 for Low, 1 for Moderate, 2 for High, and 3 for Critical. A h
 - The app uses application-managed accounts; there is no SSO, MFA, invitation email, or self-service password recovery.
 - Evidence is a text reference only. Do not upload sensitive evidence files or regulated personal data to this app.
 - The starter controls and framework mappings are illustrative. Validate scope, applicability, and mappings against authoritative requirements.
-- The deployment is for one organization and a single application instance. It is not a multi-tenant service, and the audit log is not immutable.
+- Workspaces are isolated in application queries and service permissions, but share one application/database deployment. Review membership and group access carefully; the audit log is not immutable.
+- CISA content is reference data, not real-time monitoring or proof of local exposure.
 - Before production use, configure TLS, network restrictions, backups and restore tests, monitoring, secret rotation, and an incident-response process.
 
 See [Security](SECURITY.md), the [Threat Model](docs/THREAT_MODEL.md), and [Troubleshooting](docs/TROUBLESHOOTING.md) for further detail.
@@ -146,9 +154,9 @@ The [print-ready project report](docs/PROJECT_REPORT.html) covers system archite
 | Document | Purpose |
 |---|---|
 | [Setup guide](docs/SETUP.md) | Local configuration, Docker Compose, and environment variables |
-| [Architecture](docs/ARCHITECTURE.md) | Components, data flow, and design boundaries |
-| [Runbook](docs/RUNBOOK.md) | Startup, administration, backup considerations, and operational checks |
-| [Threat model](docs/THREAT_MODEL.md) | Assets, trust boundaries, threats, mitigations, and residual risk |
+| [Architecture](docs/ARCHITECTURE.md) | Organization isolation, components, roles, data flow, and risk/feed semantics |
+| [Runbook](docs/RUNBOOK.md) | Startup, workspace/group access, backups, and operational checks |
+| [Threat model](docs/THREAT_MODEL.md) | Tenant boundaries, assets, threats, mitigations, and residual risk |
 | [Verification report](docs/VERIFICATION_REPORT.md) | Test evidence and what remains unverified |
 | [Changelog](CHANGELOG.md) | User-facing project changes |
 
@@ -168,15 +176,15 @@ The test suite covers risk summaries, persistence and migrations, validation, ac
 ## Repository map
 
 ```text
-app.py                              Streamlit application and role-aware UI
-src/grc_dashboard/data.py           Illustrative controls used to seed an empty register
-src/grc_dashboard/store.py          Validation, persistence, account lifecycle, audit log
+app.py                              Streamlit application and workspace-aware UI
+src/grc_dashboard/store.py          Scoped persistence, memberships, groups, audit/history
 src/grc_dashboard/security.py       Password hashing and role-permission checks
-src/grc_dashboard/risk_engine.py    Maturity summaries and risk prioritization
-migrations/                         Versioned Alembic schema migrations
-tests/                              Risk, persistence, access, and export tests
-docs/PROJECT_REPORT.html            Print-ready project report
-docs/dashboard-preview.svg          Illustrative dashboard visual
+src/grc_dashboard/risk_engine.py    Maturity, risk scoring, and remediation suggestions
+src/grc_dashboard/intelligence.py   Validated CISA KEV and advisory feed client
+migrations/                         Versioned Alembic schema and data backfills
+tests/                              App, isolation, migration, risk, feed, and export tests
+docs/PROJECT_REPORT.html            Styled, print-ready project report
+docs/dashboard-preview.svg          Illustrative workspace dashboard visual
 docs/architecture.svg               System architecture infographic
 ```
 

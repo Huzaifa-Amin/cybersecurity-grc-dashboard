@@ -1,59 +1,78 @@
-# Architecture overview
+# Northstar architecture
 
-Northstar is a single-organization GRC workspace built to serve a small team. The app separates the Streamlit interface, security/role checks, GRC calculations, persistence, and versioned database schema.
+Northstar is a multi-organization governance, risk, and compliance (GRC) application for small teams. A single deployment can host several isolated organization workspaces. Each workspace has its own control register, memberships, groups, audit events, control history, and vulnerability triage. The application uses Streamlit for the web interface, SQLAlchemy for persistence, and Alembic for database migrations.
 
-## Runtime request flow
+## Request and authorization flow
 
 ```text
 Browser
   -> Streamlit UI (app.py)
-  -> session/account check (security.py + users table)
-  -> permission-gated form and input validation (store.py)
-  -> SQLAlchemy transaction
-  -> PostgreSQL (shared Compose deployment) or SQLite (local use/tests)
-  -> audit event for write operations
+  -> signed-in account and active workspace selection
+  -> service-layer membership and minimum-role check (store.py)
+  -> workspace-scoped SQLAlchemy query or transaction
+  -> PostgreSQL (shared deployment) or SQLite (local use/tests)
+  -> same-transaction audit event for supported writes
 ```
 
-The app checks the current account status and authorization version on each rerun. A disabled user or a session invalidated by an account/password update is redirected to sign-in. Viewers can read/export; editors can create/update controls; administrators can additionally delete controls, manage users, and view audit events.
+Navigation and hidden buttons are not the security boundary. Every data service validates the active account, its membership in the requested organization, and the required effective role before performing an operation. The effective role is the higher of the user's direct workspace role and any workspace group roles. Groups may grant `viewer` or `editor`; administrator privileges can only be assigned directly by an organization administrator.
+
+All controls, audit events, history records, and triage records are filtered by organization in the service layer. Control IDs are unique within an organization, rather than globally. Usernames are global account identifiers; one account may hold different roles in different organizations. A workspace switch is restricted to the account's active memberships.
+
+## Roles
+
+| Effective role | Read / export | Create / update controls | Update threat triage | Delete controls | Manage workspace access |
+|---|---:|---:|---:|---:|---:|
+| Viewer | Yes | No | No | No | No |
+| Editor | Yes | Yes | Yes | No | No |
+| Administrator | Yes | Yes | Yes | Yes | Yes |
+
+Each organization must retain at least one active, directly assigned administrator. Group membership cannot satisfy that requirement. Disabling or demoting a user's direct organization administrator role increments the account authorization version, invalidating existing sessions on their next app request.
 
 ## Components
 
-| File or service | Responsibility |
+| Component | Responsibility |
 |---|---|
-| `app.py` | Sign-in and first-admin flow, dashboards, sidebar filters, register and evidence views, account and audit UI. |
-| `src/grc_dashboard/exporting.py` | Register DataFrame and CSV creation with spreadsheet-formula neutralization for untrusted text. |
-| `src/grc_dashboard/security.py` | Username/password rules, salted PBKDF2-HMAC-SHA-256, password verification, and role permission predicates. |
-| `src/grc_dashboard/store.py` | SQLAlchemy table metadata, migration startup, one-time sample seed, input validation, account/control persistence, password lifecycle, and audit writes. |
-| `src/grc_dashboard/risk_engine.py` | Control maturity averages, framework counts, risk distribution, and priority ordering. |
-| `migrations/` | Alembic version history applied at application startup. |
-| `database` Compose service | PostgreSQL 16 and a persistent named data volume. The database port is not published to the host. |
+| `app.py` | Sign-in, initial administrator setup, organization switcher, overview charts, control and action pages, CISA threat-intelligence UI, and workspace/group administration. |
+| `src/grc_dashboard/security.py` | Password rules and hashing, authentication checks, and reusable role predicates. |
+| `src/grc_dashboard/store.py` | SQLAlchemy schema, organization-scoped services, input validation, migration startup, account lifecycle, audit events, and control history. |
+| `src/grc_dashboard/risk_engine.py` | Maturity/risk summaries, 1–25 inherent-risk scoring, control ranking, and deterministic human-reviewed next-step suggestions. |
+| `src/grc_dashboard/intelligence.py` | Bounded HTTPS retrieval and input validation for official CISA KEV and cybersecurity-advisory feeds. |
+| `src/grc_dashboard/exporting.py` | Workspace-filtered register exports and spreadsheet formula neutralization. |
+| `migrations/` | Versioned schema changes and legacy-data backfill. |
+| PostgreSQL / SQLite | PostgreSQL is the intended shared deployment database; SQLite is for local development and automated tests. |
 
 ## Database entities
 
-- **users:** username, display name, password hash, role, enabled flag, temporary-password requirement, authentication version, and creation time.
-- **controls:** control ID and name, domain/framework, owner, implementation state, maturity score, risk rating, due date, evidence reference, notes, and timestamps.
-- **audit_log:** actor, action, entity, event details, and timestamp for successful account/control mutations.
-- **app_settings:** one-time starter-data seed marker, preventing an intentionally cleared control table from repopulating after restart.
-- **alembic_version:** schema migration revision.
+| Table | Workspace scope | Purpose |
+|---|---|---|
+| `users` | Global account | Username, display name, password hash, enabled state, password-change requirement, and authorization version. |
+| `organizations` | — | Workspace names and unique slugs. |
+| `organization_memberships` | Organization + user | Direct viewer/editor/administrator role and membership status. |
+| `groups` | Organization | Named viewer/editor permission groups. |
+| `group_memberships` | Organization + group + user | Ensures group members belong to the same active workspace. |
+| `controls` | Organization + control ID | Maturity, inherent likelihood/impact, residual rating, owner, status, due date, evidence reference, and notes. |
+| `control_history` | Organization + control | Timestamped status, maturity, risk, and actor snapshots on create/edit. |
+| `audit_log` | Organization | Actor, action, entity, details, and timestamp for supported mutations. |
+| `threat_triage` | Organization + CVE | Organization-specific analyst status and notes, separate from public CISA catalog data. |
+| `app_settings` | Database | One-time, per-workspace starter-data initialization markers. |
+| `alembic_version` | Database | Current database migration revision. |
 
-The app stores evidence references only. It does not accept or serve evidence files.
+Evidence is represented by a user-entered reference only; the app does not upload, scan, or serve files. Public CISA feed responses are fetched and cached in application memory; the public catalog itself is not organization-specific.
 
-## Data initialization and migrations
+## Risk and threat-intelligence semantics
 
-On startup, Alembic applies pending schema revisions. The application then seeds illustrative control records once, when the register is empty and no seed marker exists. It never creates a shared default password. The first administrator is created by an onboarding flow requiring an operator-configured token of at least 32 characters. Later accounts are provisioned by an administrator.
+- Maturity is the arithmetic mean of the selected controls' user-entered `status_score` values, rounded to one decimal place.
+- Inherent risk is an analyst estimate: `likelihood (1–5) × impact (1–5)`. Bands are Low (1–4), Moderate (5–9), High (10–16), and Critical (17–25).
+- The separate residual risk rating is also entered by the control owner/editor. The app does not infer it from public feeds.
+- Priority is `(residual risk index × 25) + (100 − maturity)`, where Low=0, Moderate=1, High=2, and Critical=3. This is a transparent sorting heuristic, not a probability or calibrated forecast.
+- Domain-specific next-step text is deterministic guidance for human review, not an automated remediation plan.
+- CISA Known Exploited Vulnerabilities (KEV) and CISA advisory feeds are official public sources, fetched on demand and cached for up to one hour. Their retrieval timestamp and source links are shown.
+- A KEV listing is not evidence that an organization's system is affected. Northstar has no asset/software inventory or automatic exposure matching. An authorized analyst records workspace triage after checking the organization's own environment.
 
-Back up the database before deployments that may apply migrations. Check the schema revision, application logs, and backups as part of the release procedure.
+## Initialization and deployment boundaries
 
-## Risk calculations
+Alembic upgrades the configured database at app startup. Existing data is preserved by the migration backfill; illustrative controls are seeded once per workspace. The first administrator is claimed using a high-entropy operator-configured bootstrap token. No default account is provisioned.
 
-- Overall control maturity is the arithmetic mean of `status_score` for the current filtered set, rounded to one decimal place.
-- Priority is `(risk severity index * 25) + (100 - status_score)`, with Low=0, Moderate=1, High=2, Critical=3; higher values appear first.
-- Overdue actions are controls past their due date whose status is not Implemented.
+Docker Compose provides a single Streamlit instance and PostgreSQL with persistent storage. The host app port is loopback-bound by default. Remote access requires a separately configured HTTPS reverse proxy and network restrictions. This design targets fewer than 1,000 registered users, but that number is not a measured throughput, concurrency, uptime, or capacity guarantee.
 
-These values are decision-support heuristics, not a validated likelihood-impact model or compliance determination.
-
-## Deployment boundaries
-
-Docker Compose runs a single Streamlit service connected to PostgreSQL and binds the host dashboard port to loopback. For remote use, put it behind a TLS reverse proxy and restrict network access. Local `streamlit run app.py` binds to loopback through `.streamlit/config.toml`; the Docker command explicitly binds inside the container so Compose can route traffic.
-
-The design target is fewer than 1,000 registered users, not a measured throughput or availability promise. There is no high availability, SSO/MFA, multi-tenant isolation, shared login throttling, immutable external audit sink, or evidence-file service. See the [project report](PROJECT_REPORT.html), [threat model](THREAT_MODEL.md), and [runbook](RUNBOOK.md).
+Known exclusions include SSO/MFA, e-mail invitations and self-service recovery, shared/distributed login rate limiting, evidence-file storage, an external immutable audit sink, high availability, and production load testing. See the [project report](PROJECT_REPORT.html), [setup guide](SETUP.md), [runbook](RUNBOOK.md), and [threat model](THREAT_MODEL.md).

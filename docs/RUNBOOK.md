@@ -2,7 +2,7 @@
 
 ## Service overview
 
-The deployment contains one Streamlit app and one PostgreSQL database. The app uses application-managed accounts and server-side session state. Alembic applies pending schema upgrades during app startup. Compose binds the app to `127.0.0.1:8501` by default and persists PostgreSQL data in the `grc_postgres_data` named volume.
+The deployment contains one Streamlit app and one PostgreSQL database. A deployment may contain multiple isolated organization workspaces. The app uses application-managed accounts and server-side session state. Alembic applies pending schema upgrades during app startup. Compose binds the app to `127.0.0.1:8501` by default and persists PostgreSQL data in the `grc_postgres_data` named volume.
 
 ## Start and inspect
 
@@ -18,12 +18,14 @@ The app health check is served at `/_stcore/health`. A database health check use
 ## Accounts and access
 
 - First-run account creation requires the operator-configured `BOOTSTRAP_ADMIN_TOKEN`.
-- Administrators create named accounts and select the least-privilege role: viewer, editor, or administrator.
+- Organization administrators add named accounts to their current organization and assign a direct viewer, editor, or administrator role.
+- An account may belong to multiple organizations and can have different direct roles in each. Access is evaluated for the active organization.
+- Workspace groups simplify access management: groups may grant viewer/editor, never administrator. Group membership must be within that organization.
+- Keep at least one active, directly assigned administrator in every organization.
 - Newly created or password-reset accounts must change their temporary password before accessing the workspace. Administrators can reset other accounts; send the temporary credential only through an approved secure channel.
-- Editors create and update controls; only administrators can delete controls.
-- Administrators can deactivate accounts and review recent audit events.
+- Editors create/update controls and record organization-specific threat triage; only administrators can delete controls.
+- Administrators can deactivate a workspace membership and review that workspace's recent audit events.
 - Users change their own password from the account panel. Password or role changes invalidate that account's existing sessions on their next request.
-- At least one active administrator must remain.
 
 Never share accounts. Do not send passwords or bootstrap tokens through issue reports or logs.
 
@@ -36,6 +38,8 @@ docker compose exec -T database pg_dump -U grc_dashboard grc_dashboard > .\grc-d
 ```
 
 Protect the backup as sensitive organizational information and copy it to a separate, access-controlled location. Test restore procedures on a separate database before relying on backups. The persistent Docker volume is not a backup.
+
+Take and verify a backup before deploying code that contains a new Alembic migration. The migration backfills existing records into the initial workspace; validate workspace membership, control counts, and audit history after upgrade.
 
 For a clean PostgreSQL database restore:
 
@@ -51,6 +55,7 @@ Use a maintenance window and verify the restored control count, accounts, and re
 - Monitor container health, application/database logs, free disk space, and dependency advisories.
 - Apply reviewed dependency and base-image updates; rebuild and run the test suite before deploying.
 - Review active administrators and account roles periodically; deactivate users who no longer need access.
+- Review organization membership and group rosters, including each user's effective role, periodically.
 - Rotate secrets using an approved process and verify database connectivity afterward.
 - Test database backups and restore drills regularly.
 - Keep the app behind TLS and network access controls for any non-local usage.
@@ -59,4 +64,6 @@ Use a maintenance window and verify the restored control count, accounts, and re
 
 If the database is unavailable, the app displays a database initialization/access error rather than substituting demo data. Preserve logs while diagnosing the configured database and networking. If the database is lost, restore a verified backup; otherwise an empty database is initialized with starter controls and requires a new bootstrap token and first administrator.
 
-This is a single-app-instance design and does not include high availability, automated migration tooling, SSO/MFA, a tamper-proof audit sink, evidence file storage, or capacity guarantees. The under-1,000-user profile is a target, not a measured service level.
+Public CISA feed data are fetched on demand and cached for up to one hour. Feed availability is external; no inventory matching is performed, and a KEV entry is not proof of organizational exposure.
+
+This is a single-app-instance design and does not include high availability, SSO/MFA, a tamper-proof audit sink, evidence-file storage, background threat-feed monitoring, asset exposure matching, or capacity guarantees. The under-1,000-user profile is a target, not a measured service level.

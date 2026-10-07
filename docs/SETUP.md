@@ -50,21 +50,30 @@ Keep the generated bootstrap token available for initial setup. On the first app
    docker compose up --build -d
    ```
 
-4. Check service readiness using `docker compose ps` and inspect logs with `docker compose logs -f grc-dashboard`.
-5. Open `http://127.0.0.1:8501`; enter the bootstrap token and create an administrator.
-6. Add named user accounts and assign viewer, editor, or administrator according to least privilege.
+3. Check service readiness using `docker compose ps` and inspect logs with `docker compose logs -f grc-dashboard`.
+4. Open `http://127.0.0.1:8501`; enter the bootstrap token and create the first workspace administrator.
+5. Add accounts to the current workspace and assign roles according to least privilege.
 
 Compose persists PostgreSQL data in the `grc_postgres_data` named volume. Alembic applies pending schema migrations during app startup. The dashboard port binds to loopback only. For use by remote people, put the app behind an HTTPS reverse proxy with appropriate access controls and a firewall; do not publish the raw app port to the public internet. Configure `BOOTSTRAP_ADMIN_TOKEN` before first run. Once the first user exists, the first-run route is no longer available.
 
-## Roles and data handling
+## Workspaces, roles, and data handling
 
-- **Viewer:** read and export filtered control data.
-- **Editor:** viewer capabilities plus create and update controls.
-- **Administrator:** editor capabilities plus delete controls, user administration, and audit-log review.
+- A deployment can host multiple organizations. Each organization has isolated control data, members, groups, audit events, control history, and vulnerability-triage status.
+- An account can join multiple workspaces and can have a different direct role in each. Use the organization selector to switch only among active memberships.
+- **Viewer:** read and export that workspace's control data.
+- **Editor:** viewer capabilities plus create/update controls and update that workspace's threat triage.
+- **Administrator:** editor capabilities plus delete controls and manage workspace members, groups, organizations, and audit history.
+- Groups can grant viewer or editor access only. Administrator permissions must be granted directly to a workspace membership. Each workspace must retain at least one active direct administrator.
 
 Passwords must be at least 12 characters. Store only evidence references, not evidence files or credentials. Account changes should be followed by role review and, where needed, account deactivation.
 
 New accounts must replace their temporary password before opening the dashboard. Administrators can set a temporary password for an account; communicate it through an approved secure channel and ask the account owner to choose a new password at first sign-in.
+
+## Risk and public intelligence
+
+Likelihood and impact are analyst-entered values from 1 to 5; their product is a 1–25 inherent-risk score. Residual risk is a separate analyst-entered rating. Dashboard recommendations are deterministic guidance, not legal or compliance advice.
+
+The Threat intelligence page retrieves the public [CISA KEV catalog](https://www.cisa.gov/known-exploited-vulnerabilities-catalog) and [CISA advisories RSS](https://www.cisa.gov/cybersecurity-advisories/all.xml), with a one-hour in-memory cache. A KEV entry does not mean the organization's systems are affected. Verify products and versions against the organization's own inventory; then record analyst triage in the active workspace. Feed retrieval is not background monitoring or a real-time guarantee.
 
 ## Tests and quality tools
 

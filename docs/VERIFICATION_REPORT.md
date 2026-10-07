@@ -1,44 +1,37 @@
 # Verification report
 
 **Verification date:** 2026-10-07
-**Scope:** Northstar GRC application, SQLite-backed tests, database migrations, and runtime dependency set.
+**Scope:** Organization workspaces, group permissions, risk controls, CISA feed parsing, migration recovery, documentation, and the local Streamlit runtime.
 
 ## Automated checks
 
 | Check | Exact command | Result |
 |---|---|---|
-| Tests | `D:\Cybersecurity Project\.venv\Scripts\python.exe -m pytest -q` | **Passed:** 13 tests in 24.57 seconds. |
-| Lint | `D:\Cybersecurity Project\.venv\Scripts\python.exe -m ruff check .` | **Passed:** All checks passed. |
-| Formatting | `D:\Cybersecurity Project\.venv\Scripts\python.exe -m black --check .` | **Passed:** 13 files unchanged. |
-| Dependency audit | `D:\Cybersecurity Project\.venv\Scripts\pip-audit.exe -r requirements.txt -r requirements-dev.txt` | **Passed:** No known vulnerabilities found across runtime and development dependencies. |
-| Compose YAML syntax | `& 'D:\Cybersecurity Project\.venv\Scripts\python.exe' -c "import yaml; yaml.safe_load(open('docker-compose.yml', encoding='utf-8')); print('docker-compose.yml parses as YAML')"` | **Passed:** YAML parsed successfully. |
-| Docker image build | GitHub Actions CI: `docker build --tag northstar-grc:ci .` | **Passed:** CI run [37571507321](https://github.com/Huzaifa-Amin/cybersecurity-grc-dashboard/actions/runs/37571507321). |
-| GitHub security workflows | CodeQL Analysis and dependency scan | **Passed:** Security run [37571507145](https://github.com/Huzaifa-Amin/cybersecurity-grc-dashboard/actions/runs/37571507145). |
+| Full test suite | `D:\Cybersecurity Project\.venv\Scripts\python.exe -m pytest -q` | **Passed:** 23 tests in 23.80 seconds. |
+| Ruff | `D:\Cybersecurity Project\.venv\Scripts\ruff.exe check .` | **Passed:** All checks passed. |
+| Black | `D:\Cybersecurity Project\.venv\Scripts\black.exe --check .` | **Passed:** 16 files unchanged. |
+| Visual document syntax | Python `xml.etree.ElementTree` on all 3 SVGs; `html.parser` on `docs/PROJECT_REPORT.html` | **Passed:** All SVG documents parsed and the report HTML parsed. |
+| Local app health | `curl.exe --fail --silent --show-error http://127.0.0.1:8501/_stcore/health` | **Passed:** HTTP endpoint returned `ok`. |
 
-The test suite includes Streamlit `AppTest` coverage for first-administrator setup, administrator and viewer sign-in, required temporary-password replacement, and role-specific UI boundaries. Store tests cover migrations, sample-data seeding, control CRUD/audit entries, validation, password hashing/reset, session-version changes, role behavior, and administrator safeguards. CSV tests verify formula-like input is exported as text.
+The test suite includes AppTest sign-in/setup and UI role checks; organization-scoped control access and duplicate IDs; direct/group role limits; a legacy-data migration backfill; recovery from a partially created SQLite `organizations` table; audit/history; threat-triage validation and isolation; mocked CISA feed parsing/limits; risk calculations; and safe CSV export.
 
-## Runtime startup check
+## Local database and browser check
 
-Command:
+The existing local SQLite database was preserved and upgraded to Alembic revision `0002_workspaces`. Verification confirmed the existing account remained present, the existing 10 control records remained, and the starter workspace was initialized. The local application rendered its sign-in page at `http://127.0.0.1:8501`; the health endpoint returned `ok`.
 
-```powershell
-$env:DATABASE_URL = '<temporary SQLite database URL>'
-$env:BOOTSTRAP_ADMIN_TOKEN = '<test-only token>'
-python -m streamlit run app.py --server.headless true --server.port 8502
-```
+The CISA client is tested with mocked HTTP responses. A live external CISA feed fetch was not included in this check. Feed data are fetched on demand and cached in application memory for up to one hour.
 
-Result: **Passed.** The app started at `http://127.0.0.1:8502`; `GET /_stcore/health` returned **HTTP 200**. The first-administrator setup page rendered in a browser. The temporary database and its SQLite sidecar files were removed afterward. Local Streamlit is configured to bind to loopback and usage telemetry is disabled.
+## GitHub and hosting validation
 
-## Deployment validation boundary
+The separate Render hosting PR (#16) has passing GitHub CI and security checks on its latest commit, including the Docker image build, CodeQL, and dependency scan. Those checks validate the proposed container and repository workflows; they do not provision or verify a live Render service.
 
-The Docker CLI is not installed in the local development environment, so Docker Compose interpolation, PostgreSQL startup, and PostgreSQL-backed application behavior were **not run locally**. The container image build did pass in GitHub Actions, but this does not validate Compose orchestration, database connectivity, backups/restores, or production deployment. Validate those in an environment with Docker Compose and PostgreSQL before team use.
+Render provisioning was not performed: a Render account/API authorization is not available in the environment, and the proposed managed web/database plans may incur charges. Review provider pricing and authorize the hosting account before creating live resources. The local app and data are not automatically copied to a hosted database.
 
-## Known scope limits
+## Remaining release checks
 
-- The fewer-than-1,000-user profile is a design target, not a tested throughput or availability guarantee.
-- The supplied verification uses SQLite; exercise migrations, backups/restores, and expected concurrent use against the actual PostgreSQL host before launch.
-- This project has no SSO/MFA, e-mail invitations or self-service password recovery, distributed login throttling, immutable external audit sink, evidence file store, multi-tenant isolation, or high availability.
-- No independent penetration test, accessibility audit, or production load test was performed.
-- Sample controls and framework references are illustrative and require organizational review.
+- Run the product branch's GitHub CI/security checks after it is pushed.
+- Provision the Render Blueprint only after account access and billing are authorized; then verify login, organization membership, persistence across restarts, backup/restore, and TLS/reachability.
+- Test migrations and backup restoration against the actual PostgreSQL deployment.
+- Complete an independent security/accessibility review and a production-appropriate concurrency/load test before relying on the service.
 
-This report records checks run in the current workspace; it is not a compliance attestation or production certification.
+The under-1,000-user profile is a design target, not a measured capacity, performance commitment, or availability guarantee. This report is not a compliance attestation or production certification.

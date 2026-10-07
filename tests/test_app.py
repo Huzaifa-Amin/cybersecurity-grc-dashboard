@@ -25,6 +25,7 @@ def test_first_admin_setup_login_and_viewer_permissions(
     for text_input, value in zip(
         app.text_input,
         (
+            "Example Organization",
             "root",
             "Root Administrator",
             "root-password-for-test",
@@ -51,12 +52,8 @@ def test_first_admin_setup_login_and_viewer_permissions(
     app.text_input[1].set_value("root-password-for-test")
     app.button[0].click().run()
     assert not app.exception
-    assert [tab.label for tab in app.tabs] == [
-        "Executive overview",
-        "Control register",
-        "Evidence & actions",
-        "Users & audit",
-    ]
+    assert any(radio.label == "Navigate" for radio in app.radio)
+    app.radio[0].set_value("Controls & risk").run()
     assert any(radio.label == "Control action" for radio in app.radio)
 
     app = AppTest.from_file(str(APP_FILE), default_timeout=30).run()
@@ -77,10 +74,8 @@ def test_first_admin_setup_login_and_viewer_permissions(
     app.text_input[1].set_value("reader-updated-password")
     app.button[0].click().run()
     assert not app.exception
-    assert app.title[0].value == "Cybersecurity GRC workspace"
-    assert [tab.label for tab in app.tabs] == [
-        "Executive overview",
-        "Control register",
-        "Evidence & actions",
-    ]
+    assert app.session_state["active_page"] == "Overview"
+    assert any(radio.label == "Navigate" for radio in app.radio)
+    app.radio[0].set_value("Controls & risk").run()
+    assert any("viewer role allows read-only" in item.value.lower() for item in app.info)
     assert not any(radio.label == "Control action" for radio in app.radio)
